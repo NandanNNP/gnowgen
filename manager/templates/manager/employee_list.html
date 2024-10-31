@@ -1,0 +1,21 @@
+<h2>Employee List</h2>
+<table>
+    <tr>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Verified</th>
+        <th>Actions</th>
+    </tr>
+    {% for employee in employees %}
+    <tr>
+        <td>{{ employee.username }}</td>
+        <td>{{ employee.email }}</td>
+        <td>{{ employee.is_verified }}</td>
+        <td>
+            {% if not employee.is_verified %}
+                <a href="{% url 'manager:verify_employee' employee.id %}">Verify Employee</a>
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>

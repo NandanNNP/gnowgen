@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Schedule</title>
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css' rel='stylesheet' />
+    <style>
+        #calendar {
+            max-width: 900px;
+            margin: 40px auto;
+        }
+        .fc-day {
+            position: relative; /* Relative position for absolute children */
+        }
+        .highlight {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 5px;
+            opacity: 0.5;
+        }
+        .plastic { background-color: green; }
+        .iron { background-color: brown; }
+        .paper { background-color: #f0f0f0; } /* Off white */
+        .e-waste { background-color: blue; }
+        .aluminum { background-color: cyan; }
+        .glass { background-color: yellow; }
+        .today {
+            border: 2px solid red; /* Mark today's date */
+        }
+        /* Circle for today's date */
+        .today-circle {
+            position: absolute;
+            width: 100%;  /* Cover entire box */
+            height: 100%; /* Cover entire box */
+            border-radius: 50%; /* Make it circular */
+            border: 4px solid rgb(0, 183, 255); /* Circle border color */
+            top: 0; /* Align to top */
+            left: 0; /* Align to left */
+            z-index: 10; /* Ensure it stays on top */
+            box-sizing: border-box; /* Ensure padding and border are included in width and height */
+        }
+        /* Cross for past scheduled dates */
+        .past-schedule-cross {
+            position: absolute;
+            width: 100%;  /* Cover entire box */
+            height: 100%; /* Cover entire box */
+            color: red;
+            font-size: 100px; /* Increase size for visibility */
+            text-align: center;
+            line-height: 100%; /* Center cross vertically */
+            top: 0;
+            left: 0;
+            z-index: 10000; /* Ensure it's on top of other elements */
+            font-weight: bold;
+            display: flex; /* Use flexbox for centering */
+            align-items: center; /* Center vertically */
+            justify-content: center; /* Center horizontally */
+            background-color: rgba(255, 255, 255, 0); /* Transparent background to show highlights */
+        }
+    </style>
+</head>
+<body>
+
+<h2>View Schedule</h2>
+<div id='calendar'></div>
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js'></script>
+x
+<script>
+    $(document).ready(function() {
+        var events = {{ schedules|safe }};  // Pass schedule_data directly to events
+
+        $('#calendar').fullCalendar({
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'month,agendaWeek,agendaDay'
+            },
+            defaultDate: moment().format('YYYY-MM-DD'), // Set current date
+            editable: false,
+            events: events,
+            dayRender: function(date, cell) {
+                // Highlight today's date
+                if (date.format('YYYY-MM-DD') === moment().format('YYYY-MM-DD')) {
+                    cell.addClass('today');
+                    cell.append('<div class="today-circle"></div>'); // Add circle for today's date
+                }
+
+                // Highlight days based on events
+                events.forEach(function(event) {
+                    // Use format for date comparison to disregard time
+                    if (date.format('YYYY-MM-DD') === moment(event.start).format('YYYY-MM-DD')) {
+                        cell.append('<div class="highlight ' + event.className + '"></div>');
+
+                        // Check if the date is in the past
+                        if (date.isBefore(moment(), 'day')) {
+                            cell.append('<div class="past-schedule-cross">✖</div>');  // Add red cross for past dates
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

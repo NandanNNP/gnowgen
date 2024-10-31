@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Money to Admin Wallet</title>
+    <style>
+        /* Basic CSS for styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .form-container {
+            max-width: 400px;
+            margin: auto;
+        }
+        .input-box {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+        }
+        .submit-button {
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Add Money to Admin Wallet</h2>
+        <form method="post">
+            {% csrf_token %}
+            <input type="number" name="amount" placeholder="Enter Amount" class="input-box" required>
+            <button type="submit" class="submit-button">Add Money</button>
+        </form>
+    </div>
+</body>
+</html>

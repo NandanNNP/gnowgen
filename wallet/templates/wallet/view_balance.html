@@ -1,0 +1,4 @@
+<h2>Wallet Balance: {{ wallet.balance }}</h2>
+{% if request.user.user_type == 1 %}
+    <a href="{% url 'wallet:withdraw_money' %}">Withdraw Money</a>
+{% endif %}

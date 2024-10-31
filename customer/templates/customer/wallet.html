@@ -1,0 +1,8 @@
+<h2>Wallet</h2>
+<p>Balance: {{ wallet.balance }}</p>
+<p>Rewards: {{ wallet.rewards }}</p>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Withdraw</button>
+</form>

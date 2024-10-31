@@ -1,0 +1,56 @@
+<!-- employee/templates/employee/notification_manager.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notification Manager</title>
+</head>
+<body>
+    <h2>Notification Manager</h2>
+    
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Send Notification</button>
+    </form>
+    
+    <h3>Customer Notifications</h3>
+    {% if customer_notifications %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Customer</th>
+                    <th>Message</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for notification in customer_notifications %}
+                    <tr>
+                        <td>{{ notification.user.username }}</td>
+                        <td>{{ notification.message }}</td>
+                        <td>{{ notification.date }}</td>
+                        <td>
+                            {% if notification.user.is_verified %}
+                                <!-- Show "View Address" if the customer is verified -->
+                                <form action="{% url 'employee:view_address' notification.user.id %}" method="get" style="display:inline;">
+                                    <button type="submit">View Address</button>
+                                </form>
+                            {% else %}
+                                <!-- Show "Verify User" button if the customer is not verified -->
+                                <form action="{% url 'employee:verify_user' notification.user.id %}" method="get" style="display:inline;">
+                                    <button type="submit">Verify User</button>
+                                </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No notifications from customers.</p>
+    {% endif %}
+</body>
+</html>  

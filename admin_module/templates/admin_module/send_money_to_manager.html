@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Send Money to Manager</title>
+</head>
+<body>
+    <h1>Send Money to Manager</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label for="manager_id">Select Manager:</label>
+        <select name="manager_id" required>
+            {% for manager in managers %}
+                <option value="{{ manager.id }}">{{ manager.username }}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <label for="amount">Amount:</label>
+        <input type="number" name="amount" step="0.01" required>
+        <br>
+        <button type="submit">Send Money</button>
+    </form>
+</body>
+</html>

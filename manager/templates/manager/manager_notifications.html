@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manager Notifications</title>
+</head>
+<body>
+    <h1>Notifications from Employees</h1>
+    <ul>
+        {% for notification in notifications %}
+            <li>{{ notification.message }} - {{ notification.created_at }}</li>
+        {% empty %}
+            <li>No notifications</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'manager:send_notification_to_employee' %}">Send Notification to Employee</a>
+</body>
+</html>
+    

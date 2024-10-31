@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book a Slot</title>
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css' rel='stylesheet' />
+    <style>
+        #calendar {
+            max-width: 900px;
+            margin: 40px auto;
+        }
+        .fc-day {
+            position: relative;
+        }
+        .highlight {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 5px;
+            opacity: 0.5;
+        }
+        .plastic { background-color: green; }
+        .iron { background-color: brown; }
+        .paper { background-color: #f0f0f0; }
+        .e-waste { background-color: blue; }
+        .aluminum { background-color: cyan; }
+        .glass { background-color: yellow; }
+        .today {
+            border: 2px solid red;
+        }
+        .today-circle {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 4px solid rgb(0, 183, 255);
+            top: 0;
+            left: 0;
+            z-index: 10;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Book a Slot</h2>
+<div id="calendar"></div>
+
+<!-- Manual form creation -->
+<form method="post" action="{% url 'customer:slot_booking' %}" id="booking-form">
+    {% csrf_token %}
+    <input type="hidden" name="date" id="selected_date">  <!-- Hidden input for date -->
+    <button type="submit" style="display: none;">Book Slot</button>  <!-- Hidden button to submit -->
+</form>
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js'></script>
+<script>
+    $(document).ready(function() {
+        var events = {{ schedules|safe }};
+        var highlightDates = events.map(event => event.start); // Array of available dates
+
+        $('#calendar').fullCalendar({
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'month,agendaWeek,agendaDay'
+            },
+            defaultDate: moment().format('YYYY-MM-DD'),
+            editable: false,
+            events: events,
+            dayClick: function(date, jsEvent, view) {
+                if (highlightDates.includes(date.format('YYYY-MM-DD'))) {
+                    if (confirm("Do you want to book this date: " + date.format("YYYY-MM-DD") + "?")) {
+                        $('#selected_date').val(date.format());  // Set the hidden input value
+                        alert("Selected Date: " + date.format("YYYY-MM-DD"));  // Optional alert for confirmation
+                        $('#booking-form').submit();  // Submit the form automatically
+                    }
+                } else {
+                    alert("This date is not available for booking.");
+                }
+            },
+            dayRender: function(date, cell) {
+                if (date.format('YYYY-MM-DD') === moment().format('YYYY-MM-DD')) {
+                    cell.addClass('today');
+                    cell.append('<div class="today-circle"></div>');
+                }
+                events.forEach(function(event) {
+                    if (date.format('YYYY-MM-DD') === event.start) {
+                        cell.append('<div class="highlight ' + event.className + '"></div>');
+                    }
+                });
+            }
+        });
+        
+    });
+</script>
+
+</body>
+</html>
