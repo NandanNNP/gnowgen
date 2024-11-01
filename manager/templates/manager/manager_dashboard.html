@@ -102,7 +102,7 @@
 
     function manageWallet() {
       // Navigate to the wallet management page
-      window.location.href = "{% url 'wallet:manager_wallet' %}"; <!-- Updated to wallet URL -->
+      {% comment %} window.location.href = "{% url 'wallet:manager_wallet' %}"; <!-- Updated to wallet URL --> {% endcomment %}
     }
 
     function showSettingsForm() {
