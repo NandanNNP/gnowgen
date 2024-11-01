@@ -62,13 +62,16 @@ def withdraw_money(request):
         if wallet.balance >= amount:
             wallet.balance -= amount
             wallet.save()
-            # Add logic for bank transfer integration here
+            # Here you could add logic for actual bank transfer integration if needed.
             WalletTransaction.objects.create(sender=request.user, receiver=None, amount=amount, transaction_type='withdrawal')
             messages.success(request, f"Successfully withdrew {amount} to your bank account.")
         else:
             messages.error(request, "Insufficient balance.")
             
-    return redirect('wallet:view_balance')
+    # Retrieve the wallet and transactions for display
+    wallet, _ = Wallet.objects.get_or_create(user=request.user)
+    transactions = WalletTransaction.objects.filter(sender=request.user).order_by('-created_at')
+    return render(request, 'wallet/withdraw_money.html', {'wallet': wallet, 'transactions': transactions})
 
 def determine_transaction_type(sender, receiver):
     if sender.user_type == 4 and receiver.user_type == 4:
@@ -78,3 +81,27 @@ def determine_transaction_type(sender, receiver):
     elif sender.user_type == 3 and receiver.user_type == 1:
         return 'manager_to_customer'
     return 'unknown'
+
+from django.shortcuts import render, get_object_or_404
+
+from core.models import Wallet, WalletTransaction
+
+
+
+@login_required
+def manager_wallet(request):
+    # Get or create the wallet for the logged-in manager
+    wallet, created = Wallet.objects.get_or_create(user=request.user, defaults={'balance': 0.0})
+    # Fetch recent transactions for the manager
+    transactions = WalletTransaction.objects.filter(receiver=request.user).order_by('-created_at')
+    return render(request, 'wallet/manager_wallet.html', {'wallet': wallet, 'transactions': transactions})
+
+
+
+@login_required
+def transaction_history(request):
+    # Fetch all transactions for the logged-in user
+    transactions = WalletTransaction.objects.filter(
+        Q(sender=request.user) | Q(receiver=request.user)
+    ).order_by('-created_at')
+    return render(request, 'wallet/transaction_history.html', {'transactions': transactions})

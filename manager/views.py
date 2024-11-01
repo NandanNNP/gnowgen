@@ -66,3 +66,6 @@ def send_notification_to_employee(request):
         return redirect('manager:manager_notifications')
     employees = CustomUser.objects.filter(user_type=2)  # All employees
     return render(request, 'manager/send_notification.html', {'employees': employees})
+
+
+

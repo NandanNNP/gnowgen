@@ -14,4 +14,6 @@ urlpatterns = [
     path('manage-employees/', views.manage_employees, name='manage_employees'), 
     path('notifications/', views.manager_notifications, name='manager_notifications'),
     path('send-notification/', views.send_notification_to_employee, name='send_notification_to_employee'),
+
+    
 ]
