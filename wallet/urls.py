@@ -8,4 +8,7 @@ urlpatterns = [
     path('send-money/', views.send_money, name='send_money'),
     path('view-balance/', views.view_balance, name='view_balance'),
     path('withdraw/', views.withdraw_money, name='withdraw_money'),
+    path('manager-wallet/', views.manager_wallet, name='manager_wallet'),
+    path('transaction-history/', views.transaction_history, name='transaction_history'),  # New URL
+    
 ]

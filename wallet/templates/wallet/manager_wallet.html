@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager Wallet</title>
+    <style>
+        .wallet-info {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .transactions {
+            margin-top: 20px;
+        }
+        .transaction {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="wallet-info">
+    <h1>{{ request.user.username }}'s Wallet</h1>
+    <p>Balance: {{ wallet.balance }} INR</p>
+</div>
+
+<div class="transactions">
+    <h2>Recent Transactions</h2>
+    {% for transaction in transactions %}
+        <div class="transaction">
+            <p>{{ transaction.sender.username }} sent {{ transaction.amount }} INR on {{ transaction.created_at }}</p>
+        </div>
+    {% empty %}
+        <p>No recent transactions found.</p>
+    {% endfor %}
+</div>
+
+</body>
+</html>

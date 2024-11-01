@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from datetime import datetime, timedelta
 from django.utils import timezone
+from core.models import Wallet
 
 @login_required
 def create_user(request):
@@ -38,17 +39,21 @@ def verify_user(request, user_id):
         user_to_verify.is_verified = True
         user_to_verify.save()
 
+        # Automatically create a wallet if one does not exist
+        Wallet.objects.get_or_create(user=user_to_verify, defaults={'balance': 0.0})
+
         address_form = AddressForm(request.POST)
         if address_form.is_valid():
             address = address_form.save(commit=False)
             address.user = user_to_verify
             address.save()
-            messages.success(request, f"User {user_to_verify.username} has been verified and address added successfully.")
+            messages.success(request, f"User {user_to_verify.username} has been verified, wallet created, and address added successfully.")
             return redirect('employee:verify_user_list')
     else:
         address_form = AddressForm()
 
     return render(request, 'employee/verify_user.html', {'user': user_to_verify, 'address_form': address_form})
+
 
 @login_required
 def verify_user_list(request):
