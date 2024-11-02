@@ -82,6 +82,12 @@ AUTH_USER_MODEL = 'core.CustomUser'
 
 # dumpex/settings.py
 LOGIN_REDIRECT_URL = 'home'  # Redirect here by default after login
+  
+MEDIA_ROOT = BASE_DIR / 'media'
+
+MEDIA_URL = '/media/'
+
+
 
 
 # Database

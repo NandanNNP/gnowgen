@@ -8,7 +8,12 @@
     <h1>Notifications from Employees</h1>
     <ul>
         {% for notification in notifications %}
-            <li>{{ notification.message }} - {{ notification.created_at }}</li>
+            <li>
+                {{ notification.message }} - {{ notification.created_at }}
+                {% if notification.is_fund_transfer %}
+                    <a href="{% url 'wallet:transfer_funds_to_customer' %}?receiver_id={{ notification.user.id }}&amount={{ notification.amount }} ">Transfer Funds</a>
+                {% endif %}
+            </li>
         {% empty %}
             <li>No notifications</li>
         {% endfor %}
@@ -16,4 +21,3 @@
     <a href="{% url 'manager:send_notification_to_employee' %}">Send Notification to Employee</a>
 </body>
 </html>
-    

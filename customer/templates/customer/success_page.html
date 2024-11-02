@@ -9,6 +9,20 @@
 <body>
     <h2>Booking Successful!</h2>
     <p>Your booking has been confirmed. A notification has been sent to the employee responsible for the collection.</p>
+
+    {% if booking.qr_code %}
+        <div>
+            <h3>Your QR Code:</h3>
+            <img src="{{ booking.qr_code.url }}" alt="QR Code for your booking">
+            <p>Please show this QR code to the employee on collection day.</p>
+            <p>your Booking ID is {{booking.id}} </p>
+            <a href="{{ booking.qr_code.url }}" download="QR_Code_Booking_{{ booking.id }}.png">Download QR Code</a>
+        </div>
+    {% else %}
+        <p>QR code could not be generated.</p>
+        <p>your Booking ID is {{booking.id}} </p>
+    {% endif %}
+
     <a href="{% url 'customer:customer_dashboard' %}">Return to Dashboard</a>
 </body>
 </html>

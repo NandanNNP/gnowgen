@@ -1,12 +1,13 @@
 # employee/views.py
 from core.models import CustomUser, Address, CollectionSchedule, Notification, SlotBooking
-from .forms import UserCreationForm, AddressForm, ScheduleForm, NotificationForm
+from .forms import UserCreationForm, AddressForm, ScheduleForm, NotificationForm,CollectionForm
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from datetime import datetime, timedelta
 from django.utils import timezone
 from core.models import Wallet
+
 
 @login_required
 def create_user(request):
@@ -84,14 +85,23 @@ def notification_manager(request):
         form = NotificationForm()
 
     current_date = timezone.now().date()
+    three_days_ago = current_date - timedelta(days=3)
+    
+
 
     # Delete expired notifications and slot bookings
-    SlotBooking.objects.filter(date__lt=current_date).delete()
-    Notification.objects.filter(user__slotbooking__date__lt=current_date,date__isnull=False).delete()
+    SlotBooking.objects.filter(date__lt=three_days_ago).delete()
+    threshold_date = timezone.now().date() - timedelta(days=2)
+
+    # Delete notifications where the `date` is older than the threshold date and is not null
+    Notification.objects.filter(date__lt=threshold_date, date__isnull=False).delete()
+    
 
     customer_notifications = Notification.objects.filter(
         user__user_type=1, date__gte=current_date
     ).order_by('date')
+
+    print(customer_notifications)
 
     return render(request, 'employee/notification_manager.html', {
         'form': form,
@@ -171,3 +181,56 @@ def view_manager_notifications(request):
 
     return render(request, 'employee/view_manager_notifications.html', {'notifications': notifications})
 
+
+
+#qr 
+
+@login_required
+def scan_qr_code(request):
+    return render(request, 'employee/scan_qr_code.html')
+
+from django.shortcuts import render, get_object_or_404, redirect
+from core.models import SlotBooking
+from .forms import CollectionForm
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def collect(request, booking_id):
+    try:
+        booking = SlotBooking.objects.get(id=booking_id, customer__is_verified=True)
+    except SlotBooking.DoesNotExist:
+        # Render an error page if the booking is not found
+        return render(request, 'employee/error_page.html', {
+            'error_message': "The specified booking was not found or the customer is not verified."
+        })
+    if request.method == 'POST':
+        form = CollectionForm(request.POST)
+        if form.is_valid():
+            collected_weight = form.cleaned_data['collected_weight']
+            booking.collected_weight = collected_weight
+            booking.save()
+
+
+            collection_schedule = CollectionSchedule.objects.filter(date=booking.date, employee=request.user).first()
+            # Calculate the total amount to be transferred
+            waste_type = collection_schedule.waste_type  # Assuming SlotBooking has a related CollectionSchedule
+            price_per_kg = CollectionSchedule.PRICE_PER_KG[waste_type]
+            total_amount = collected_weight * price_per_kg
+
+            # Create notification for the manager
+            manager = CustomUser.objects.filter(user_type=3).first()
+            print(f"Customer Username: {booking.customer.username}")  # Assuming there's only one manager
+            Notification.objects.create(
+                user=manager,
+                message=f"Transfer {total_amount} to {booking.customer.username}'s wallet for {collected_weight} kg of {waste_type} collected.",
+                is_fund_transfer=True,
+                amount=total_amount
+            )
+
+            messages.success(request, "Collection data submitted successfully. Notification sent to manager.")
+            return redirect('employee:employee_dashboard')
+    else:
+        form = CollectionForm()
+
+    return render(request, 'employee/collect_form.html', {'booking': booking, 'form': form})

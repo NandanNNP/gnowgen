@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scan QR Code</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        video {
+            width: 300px;
+            height: auto;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        h2 {
+            margin-bottom: 10px;
+        }
+        .manual-entry {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Scan QR Code</h2>
+    <p>Align the QR code within the camera frame to scan and proceed to the collection form.</p>
+    <video id="preview"></video> <!-- Video element for scanning -->
+
+    <!-- Instascan library for scanning QR codes -->
+    <script src="https://cdn.rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
+    <script>
+        if (typeof Instascan === 'undefined') {
+            console.error('Instascan library not loaded. Please check the script source.');
+            alert('Error: Instascan library not loaded. Please refresh the page.');
+        } else {
+            let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
+            scanner.addListener('scan', function(content) {
+                console.log('Scanned content:', content);
+                const bookingIdMatch = content.match(/Booking ID:\s*(\d+)/);
+                const bookingId = bookingIdMatch ? bookingIdMatch[1] : null;
+                console.log('Extracted Booking ID:', bookingId);
+                if (bookingId) {
+                    window.location.href = `/employee/collect/${bookingId}/`;
+                } else {
+                    alert("Invalid QR Code. Please scan a valid QR code.");
+                }
+            });
+
+            Instascan.Camera.getCameras().then(function(cameras) {
+                if (cameras.length > 0) {
+                    scanner.start(cameras[0]).catch(e => {
+                        console.error('Error starting camera: ', e);
+                        alert('Error starting camera: ' + e.message);
+                    });
+                } else {
+                    alert('No cameras found. Please ensure your device has a camera and it is properly connected.');
+                }
+            }).catch(function(e) {
+                console.error('Error accessing cameras: ', e);
+                alert('Error accessing the camera. Please check your permissions and try again.');
+            });
+        }
+    </script>
+
+    <!-- Manual Booking ID Entry -->
+    <div class="manual-entry">
+        <h3>Manual Booking ID Entry</h3>
+        <form id="manual-entry-form" action="" method="get" onsubmit="return redirectToBooking();">
+            <label for="booking-id">Enter Booking ID:</label>
+            <input type="text" id="booking-id" name="booking_id" placeholder="e.g., 12345" required>
+            <button type="submit">Proceed</button>
+        </form>
+    </div>
+
+    <script>
+        // Redirects to the collection form using the entered booking ID
+        function redirectToBooking() {
+            const bookingId = document.getElementById('booking-id').value;
+            if (bookingId) {
+                window.location.href = `/employee/collect/${bookingId}/`;
+            } else {
+                alert("Please enter a valid Booking ID.");
+            }
+            return false;
+        }
+    </script>
+</body>
+</html>

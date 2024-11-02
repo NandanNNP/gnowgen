@@ -1,13 +1,14 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import SlotBookingForm
-from core.models import SlotBooking, Notification
+from core.models import SlotBooking, Notification,Wallet
 from django.contrib.auth.decorators import login_required
 
 
 @login_required
 def customer_dashboard(request):
-    return render(request, 'customer/customer_dashboard.html')
+    wallet, _ = Wallet.objects.get_or_create(user=request.user)
+    return render(request, 'customer/customer_dashboard.html',{'wallet':wallet})
 
 from .forms import SlotBookingForm  # Assume this form has been created
 from core.models import CollectionSchedule
@@ -16,38 +17,47 @@ from django.utils import timezone
 import json
 
 
-def book_slot_view(request):
-    # Retrieve collection schedules
-    schedules = CollectionSchedule.objects.filter(date__gte=timezone.now()).values('date', 'waste_type')
+# customer/views.py
+import json
+from django.shortcuts import render, redirect
+from django.utils import timezone
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from core.models import SlotBooking, CollectionSchedule, Notification
 
-    # Format schedules for FullCalendar
-    schedule_data = []
-    for schedule in schedules:
-        schedule_data.append({
-            'title': schedule['waste_type'],
-            'start': schedule['date'].strftime('%Y-%m-%d'),
-            'className': schedule['waste_type'].replace(' ', '-').lower(),
-        })
+@login_required
+def book_slot_view(request):
+    schedules = CollectionSchedule.objects.filter(date__gte=timezone.now()).values('date', 'waste_type')
+    schedule_data = [
+        {'title': schedule['waste_type'], 'start': schedule['date'].strftime('%Y-%m-%d'), 'className': schedule['waste_type'].replace(' ', '-').lower()}
+        for schedule in schedules
+    ]
 
     if request.method == "POST":
-        # Get the selected date directly from the POST request
-        selected_date = request.POST.get('date')  # Make sure this matches the name in your hidden input
+        selected_date = request.POST.get('date')
 
         if selected_date:
-            # Create the SlotBooking instance and assign values
             booking = SlotBooking(customer=request.user, date=selected_date)
-            booking.save()  # Save the booking to the database
+            booking.save()  # Save to get an ID before generating QR code
+            booking.generate_qr_code()  # Generate and save QR code
+            
 
-            return redirect('customer:success_page')  # Redirect to the success page or relevant page
+            messages.success(request, "Your booking has been confirmed with a QR code.")
+            return redirect('customer:success_page')
         else:
-            # Handle the case where no date was provided (should not happen with your current setup)
-            print("No date was selected.")
+            messages.error(request, "No date was selected. Please try again.")
     
-    # GET request handling
     return render(request, 'customer/book_slot.html', {
         'schedules': json.dumps(schedule_data)
     })
 
+
+
+@login_required
+def view_bookings(request):
+    # Retrieve all booking slots for the logged-in customer
+    bookings = SlotBooking.objects.filter(customer=request.user).order_by('-date')
+    return render(request, 'customer/view_bookings.html', {'bookings': bookings})
 
 # customer/views.py
 
@@ -56,26 +66,22 @@ def book_slot_view(request):
 
 
 
+# customer/views.py
+
+@login_required
 def success_page(request):
-    # Retrieve the latest booking for the current customer
     latest_booking = SlotBooking.objects.filter(customer=request.user).order_by('-id').first()
-    
+
     if latest_booking:
-        # Get the related collection schedule details (assuming a schedule exists for each booking)
         schedule = CollectionSchedule.objects.filter(date=latest_booking.date).first()
-        
-        # Find the employee assigned to this schedule
         if schedule:
-            # Create a notification for the assigned employee
             Notification.objects.create(
                 user=request.user,
                 message=f"New booking by {request.user.username} on {latest_booking.date} for {schedule.waste_type}.",
                 date=latest_booking.date
             )
-    
-    # Render the success page
-    return render(request, 'customer/success_page.html')
 
+    return render(request, 'customer/success_page.html', {'booking': latest_booking})
 
 
 
