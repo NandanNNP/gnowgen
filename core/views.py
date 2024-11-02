@@ -45,3 +45,28 @@ def login_view(request):
     return render(request, 'core/login.html', {'form': form})
 
 
+# In notifications/views.py
+from django.shortcuts import redirect, get_object_or_404
+from django.contrib import messages
+from .models import Notification
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def delete_notification(request, notification_id):
+    notification = get_object_or_404(Notification, id=notification_id, user=request.user)
+    if request.method == 'POST':
+        notification.delete()
+        messages.success(request, "Notification deleted successfully.")
+    user=request.user
+    if user.user_type == 1:
+            return redirect('customer:notification')  
+    elif user.user_type == 2:
+            return redirect('employee:employee_dashboard')  
+    elif user.user_type == 3:
+            return redirect('manager:manager_dashboard') 
+    elif user.user_type == 4:
+            return redirect('admin_module:admin_dashboard')
+
+    return redirect('login')  
+
+

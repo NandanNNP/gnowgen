@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from core.models import Wallet, WalletTransaction, CustomUser,Notification,SlotBooking
+from core.models import Wallet, WalletTransaction, CustomUser,Notification,SlotBooking,WithdrawRequest
 from django.db.models import Q
 from decimal import Decimal
 
@@ -53,25 +53,114 @@ def view_balance(request):
     wallet, _ = Wallet.objects.get_or_create(user=request.user)
     return render(request, 'wallet/view_balance.html', {'wallet': wallet})
 
+from decimal import Decimal
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ValidationError
+import qrcode
+from core.models import WithdrawRequest
+
+import os
+
+from django.conf import settings
+import os
+
 @login_required
 def withdraw_money(request):
     if request.method == 'POST' and request.user.user_type == 1:  # Ensure user is Customer
         amount = Decimal(request.POST.get('amount'))
-        wallet = Wallet.objects.get(user=request.user)
+        upi_id = request.POST.get('upi_id')
         
-        if wallet.balance >= amount:
-            wallet.balance -= amount
-            wallet.save()
-            # Here you could add logic for actual bank transfer integration if needed.
-            WalletTransaction.objects.create(sender=request.user, receiver=None, amount=amount, transaction_type='withdrawal')
-            messages.success(request, f"Successfully withdrew {amount} to your bank account.")
-        else:
+        # Validate UPI ID and amount
+        if amount <= 0:
+            messages.error(request, "Invalid amount.")
+            return redirect('wallet:withdraw_money')
+        if not upi_id or len(upi_id) < 5:
+            messages.error(request, "Invalid UPI ID.")
+            return redirect('wallet:withdraw_money')
+        
+        wallet = Wallet.objects.get(user=request.user)
+        if wallet.balance < amount:
             messages.error(request, "Insufficient balance.")
-            
-    # Retrieve the wallet and transactions for display
+            return redirect('wallet:withdraw_money')
+        
+        # Deduct amount and save the request
+        wallet.balance -= amount
+        wallet.save()
+
+        # Generate QR code with UPI details
+        qr_data = f"upi://pay?pa={upi_id}&am={amount}&cu=INR"
+        qr_img = qrcode.make(qr_data)
+        
+        # Save QR code to the media directory
+        qr_path = os.path.join(settings.MEDIA_ROOT, f"withdraw_qr_codes/{request.user.username}_{amount}.png")
+        os.makedirs(os.path.dirname(qr_path), exist_ok=True)  # Ensure the directory exists
+        qr_img.save(qr_path)
+
+        # Create a WithdrawRequest entry with the relative path
+        withdraw_request = WithdrawRequest.objects.create(
+            customer=request.user,
+            amount=amount,
+            upi_id=upi_id,
+            qr_code=f"withdraw_qr_codes/{request.user.username}_{amount}.png",
+            status='pending'
+        )
+
+        # Notify the manager
+        manager = CustomUser.objects.filter(user_type=3).first()
+        Notification.objects.create(
+            user=manager,
+            message=f"New withdrawal request: {amount} INR from {request.user.username}.",
+        )
+        
+        messages.success(request, f"Withdrawal request for {amount} INR created successfully. Awaiting manager confirmation.")
+        return redirect('wallet:withdraw_money')
+
+    # Retrieve wallet and transactions for display
     wallet, _ = Wallet.objects.get_or_create(user=request.user)
-    transactions = WalletTransaction.objects.filter(sender=request.user).order_by('-created_at')
+    transactions = WithdrawRequest.objects.filter(customer_id=request.user,status="completed").order_by('-created_at')
+    print(transactions)
     return render(request, 'wallet/withdraw_money.html', {'wallet': wallet, 'transactions': transactions})
+
+
+
+
+@login_required
+def approve_withdrawals(request):
+    if request.method == 'POST':
+        withdraw_id = request.POST.get('withdraw_id')
+        action = request.POST.get('action')
+        withdraw_request = WithdrawRequest.objects.get(id=withdraw_id)
+
+        if action == 'approve':
+            # Approve and complete the withdrawal
+            withdraw_request.status = 'completed'
+            withdraw_request.save()
+            messages.success(request, f"Withdrawal of {withdraw_request.amount} INR approved and confirmed.")
+        
+        elif action == 'cancel':
+            # Cancel the withdrawal and refund the customer's wallet
+            wallet = Wallet.objects.get(user=withdraw_request.customer)
+            wallet.balance += withdraw_request.amount
+            wallet.save()
+
+            # Update request status and send notification
+            withdraw_request.status = 'cancelled'
+            withdraw_request.save()
+            Notification.objects.create(
+                user=withdraw_request.customer,
+                message=f"Your withdrawal request of {withdraw_request.amount} INR has been cancelled due to an error. The amount has been credited back to your wallet."
+            )
+            messages.info(request, f"Withdrawal request of {withdraw_request.amount} INR was cancelled and refunded.")
+
+        return redirect('wallet:withdraw_approval')
+
+    # Retrieve pending withdrawals for display
+    pending_withdrawals = WithdrawRequest.objects.filter(status='pending')
+    return render(request, 'wallet/approve_withdrawals.html', {'pending_withdrawals': pending_withdrawals})
+
+
 
 def determine_transaction_type(sender, receiver):
     if sender.user_type == 4 and receiver.user_type == 4:

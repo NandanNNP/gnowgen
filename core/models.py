@@ -127,3 +127,20 @@ class WalletTransaction(models.Model):
 
     def __str__(self):
         return f"{self.sender.username} sent {self.amount} to {self.receiver.username} on {self.created_at}"
+    
+from django.db import models
+from django.conf import settings
+from decimal import Decimal
+
+class WithdrawRequest(models.Model):
+    customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    upi_id = models.CharField(max_length=50)
+    qr_code = models.ImageField(upload_to='withdraw_qr_codes/', blank=True, null=True)
+    status = models.CharField(max_length=20, choices=[('pending', 'Pending'), ('completed', 'Completed')], default='pending')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return f"Withdraw request by {self.customer.username} for {self.amount} INR"
+
