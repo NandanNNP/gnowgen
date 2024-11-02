@@ -65,7 +65,7 @@
       <img src="{% static 'images/schedule.png' %}" alt="Schedule" class="icon" onclick="viewSchedule()">
       <img src="{% static 'images/verify_user.png' %}" alt="Verify User" class="icon" onclick="verifyUser()">
       <img src="{% static 'images/send_notification.png' %}" alt="Send Notification" class="icon" onclick="sendNotification()"> <!-- New Icon for Sending Notifications -->
-      <img src="{% static 'images/notifications.png' %}" alt="View  Manager Notifications" class="icon" onclick="viewManagerNotifications()()"> <!-- New Icon for Viewing Notifications -->
+      <img src="{% static 'images/notifications.png' %}" alt="View Manager Notifications" class="icon" onclick="viewManagerNotifications()"> <!-- New Icon for Viewing Notifications -->
       <img src="{% static 'images/settings.png' %}" alt="Settings" class="icon" onclick="showSettingsForm()">
       <img src="{% static 'images/verified_users.png' %}" alt="Verified Users" class="icon" onclick="viewVerifiedUsers()"> <!-- Icon for Verified Users -->
     </div>
@@ -77,8 +77,9 @@
         <p class="username-display">{{ user.username }}</p>  <!-- Display the employee's username -->
     </div>
 
-    <!-- Action Button -->
+    <!-- Action Buttons -->
     <button class="action-button" onclick="manageCollection()">Manage Collections</button>
+    <button class="action-button" onclick="openScanner()">Scan QR Code</button> <!-- New button to open the QR scanner -->
 
     <!-- Settings Form (Initially Hidden) -->
     <div id="settingsForm" class="settings-form" style="display: none;">
@@ -102,12 +103,12 @@
 
     function sendNotification() {
       // Navigate to the notification sending page
-      window.location.href = "{% url 'employee:notification_manager' %}"; // Assume you have this URL configured
+      window.location.href = "{% url 'employee:notification_manager' %}";
     }
 
     function viewManagerNotifications() {
       // Navigate to the notifications page
-      window.location.href = "{% url 'employee:view_manager_notifications' %}"; // Assume you have this URL configured
+      window.location.href = "{% url 'employee:view_manager_notifications' %}";
     }
 
     function showSettingsForm() {
@@ -116,13 +117,18 @@
     }
 
     function manageCollection() {
-      // Logic to handle collection management, or redirect if needed
+      // Redirect to collection management page
       window.location.href = "{% url 'employee:collection_management' %}";
     }
 
     function viewVerifiedUsers() {
       // Navigate to the verified users list page
       window.location.href = "{% url 'employee:verified_user_list' %}";
+    }
+
+    function openScanner() {
+      // Redirect to the QR code scanner page
+      window.location.href = "{% url 'employee:scan_qr' %}";
     }
 
     function submitForm() {

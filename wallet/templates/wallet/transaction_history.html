@@ -1,26 +1,96 @@
 <!-- wallet/templates/wallet/transaction_history.html -->
-<h1>Transaction History</h1>
-<table>
-    <thead>
-        <tr>
-            <th>Date</th>
-            <th>Sender</th>
-            <th>Receiver</th>
-            <th>Amount</th>
-            <th>Type</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for transaction in transactions %}
-            <tr>
-                <td>{{ transaction.created_at }}</td>
-                <td>{{ transaction.sender.username }}</td>
-                <td>{{ transaction.receiver.username if transaction.receiver else 'Bank' }}</td>
-                <td>{{ transaction.amount }}</td>
-                <td>{{ transaction.transaction_type }}</td>
-            </tr>
-        {% empty %}
-            <tr><td colspan="5">No transactions found.</td></tr>
-        {% endfor %}
-    </tbody>
-</table>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Transaction History</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            width: 80%;
+            max-width: 800px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #0056b3;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #0056b3;
+            color: #fff;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #f1f9ff;
+        }
+        .no-transactions {
+            text-align: center;
+            font-size: 16px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Transaction History</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Sender</th>
+                    <th>Receiver</th>
+                    <th>Amount</th>
+                    <th>Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for transaction in transactions %}
+                    <tr>
+                        <td>{{ transaction.created_at|date:"d M Y, H:i" }}</td>
+                        <td>{{ transaction.sender.username }}</td>
+                        <td>
+                            {% if transaction.receiver %}
+                                {{ transaction.receiver.username }}
+                            {% else %}
+                                Bank
+                            {% endif %}
+                        </td>
+                        <td>${{ transaction.amount }}</td>
+                        <td>{{ transaction.transaction_type|title }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5" class="no-transactions">No transactions found.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

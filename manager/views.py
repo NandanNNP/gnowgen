@@ -51,8 +51,37 @@ def manage_employees(request):
 @login_required
 def manager_notifications(request):
     # Display all notifications received by the manager from employees
-    notifications = Notification.objects.filter(user=request.user).order_by('-created_at')
+    notifications = Notification.objects.filter(is_fund_transfer=1).order_by('-created_at')
     return render(request, 'manager/manager_notifications.html', {'notifications': notifications})
+
+
+@login_required
+def transfer_funds(request, notification_id):
+    # Get the notification details
+    notification = get_object_or_404(Notification, id=notification_id)
+    
+    # Assuming the message format is: "Transfer {amount} to {customer.username}'s wallet for {weight} kg of {waste_type} collected."
+    message_parts = notification.message.split(" ")
+    amount = float(message_parts[1])  # Extract the amount from the notification message
+    customer_username = message_parts[5]  # Extract the customer username
+
+    # Handle the fund transfer logic
+    if request.method == 'POST':
+        wallet, created = Wallet.objects.get_or_create(user__username=customer_username)
+        wallet.balance += amount  # Add the amount to the wallet
+        wallet.save()
+
+        # Optionally, you can delete the notification after handling it
+        notification.delete()
+
+        messages.success(request, f"Successfully transferred {amount} to {customer_username}'s wallet.")
+        return redirect('manager:manager_notifications')
+
+    return render(request, 'manager/transfer_funds.html', {
+        'notification': notification,
+        'amount': amount,
+        'customer_username': customer_username
+    })
 
 @login_required
 def send_notification_to_employee(request):

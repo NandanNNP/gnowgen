@@ -10,5 +10,6 @@ urlpatterns = [
     path('withdraw/', views.withdraw_money, name='withdraw_money'),
     path('manager-wallet/', views.manager_wallet, name='manager_wallet'),
     path('transaction-history/', views.transaction_history, name='transaction_history'),  # New URL
+    path('transfer_funds_to_customer/', views.transfer_funds_to_customer, name='transfer_funds_to_customer'),
     
 ]

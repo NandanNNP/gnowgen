@@ -43,3 +43,12 @@ class NotificationForm(forms.ModelForm):
         widgets = {
             'message': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter notification message'}),
         }
+
+# employee/forms.py
+class CollectionForm(forms.Form):
+    collected_weight = forms.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        label="Weight Collected (kg)",
+        help_text="Enter the weight of the collected waste in kilograms."
+    )

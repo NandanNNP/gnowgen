@@ -22,4 +22,8 @@ urlpatterns = [
     
     path('collection_management/', views.collection_management, name='collection_management'),  # Add this line
     path('verified_users/', views.verified_user_list, name='verified_user_list'),
+
+
+    path('employee/scan/', views.scan_qr_code, name='scan_qr'),
+    path('collect/<int:booking_id>/', views.collect, name='collect'),
 ]

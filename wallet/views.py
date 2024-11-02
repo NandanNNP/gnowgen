@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from core.models import Wallet, WalletTransaction, CustomUser
+from core.models import Wallet, WalletTransaction, CustomUser,Notification,SlotBooking
 from django.db.models import Q
 from decimal import Decimal
 
@@ -105,3 +105,49 @@ def transaction_history(request):
         Q(sender=request.user) | Q(receiver=request.user)
     ).order_by('-created_at')
     return render(request, 'wallet/transaction_history.html', {'transactions': transactions})
+
+@login_required
+def transfer_funds_to_customer(request):
+    if request.method == 'POST':
+        receiver_id = request.POST.get('receiver_id')
+        amount = Decimal(request.POST.get('amount'))
+        manager_wallet, _ = Wallet.objects.get_or_create(user=request.user)
+
+        try:
+            receiver = CustomUser.objects.get(id=receiver_id, user_type=1)  # Ensure the receiver is a customer
+            receiver_wallet, _ = Wallet.objects.get_or_create(user=receiver)
+
+            # Check if sufficient balance
+            if manager_wallet.balance >= amount:
+                manager_wallet.balance -= amount
+                receiver_wallet.balance += amount
+                manager_wallet.save()
+                receiver_wallet.save()
+
+                transaction_type = 'manager_to_customer'  # Define the transaction type
+                WalletTransaction.objects.create(sender=request.user, receiver=receiver, amount=amount, transaction_type=transaction_type)
+
+                messages.success(request, f"Successfully transferred {amount} to {receiver.username}'s wallet.")
+
+
+                # Assuming 'amount' is already defined and you're checking notifications for the manager with ID 5
+                Notification.objects.filter(user_id=5, is_fund_transfer=True, amount=amount).update(is_fund_transfer=False)
+
+                from datetime import date
+
+                # Get today's date or the specific date for the booking
+                today = date.today()
+
+                # Update the is_confirmed field for bookings on the same date NOOOOOOTE IT
+                SlotBooking.objects.filter(customer=receiver, date=today, is_confirmed=False).update(is_confirmed=True)
+
+
+
+            else:
+                messages.error(request, "Insufficient balance in manager's wallet.")
+        except CustomUser.DoesNotExist:
+            messages.error(request, "Invalid receiver.")
+            
+    # Retrieve customers for selection
+    customers = CustomUser.objects.filter(user_type=1)  # Assuming user_type=1 is for customers
+    return render(request, 'wallet/transfer_funds_to_customer.html', {'customers': customers})
