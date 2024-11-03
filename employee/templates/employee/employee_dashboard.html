@@ -68,8 +68,9 @@
       <img src="{% static 'images/notifications.png' %}" alt="View Manager Notifications" class="icon" onclick="viewManagerNotifications()"> <!-- New Icon for Viewing Notifications -->
       <img src="{% static 'images/settings.png' %}" alt="Settings" class="icon" onclick="showSettingsForm()">
       <img src="{% static 'images/verified_users.png' %}" alt="Verified Users" class="icon" onclick="viewVerifiedUsers()"> <!-- Icon for Verified Users -->
+      <img src="{% static 'images/verified_users.png' %}" alt="Send Notification to Manager" class="icon" onclick="snd()">
     </div>
-
+    
     <!-- Top Section with Logo, Hello Text, and Username -->
     <div class="top-section">
         <img src="{% static 'images/logo.png' %}" alt="Logo" class="logo">
@@ -124,6 +125,11 @@
     function viewVerifiedUsers() {
       // Navigate to the verified users list page
       window.location.href = "{% url 'employee:verified_user_list' %}";
+    }
+
+    function snd() {
+      // Navigate to the verified users list page
+      window.location.href = "{% url 'employee:send_notification_to_manager' %}";
     }
 
     function openScanner() {

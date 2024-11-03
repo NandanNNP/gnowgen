@@ -183,8 +183,9 @@ def manager_wallet(request):
     # Get or create the wallet for the logged-in manager
     wallet, created = Wallet.objects.get_or_create(user=request.user, defaults={'balance': 0.0})
     # Fetch recent transactions for the manager
-    transactions = WalletTransaction.objects.filter(receiver=request.user).order_by('-created_at')
-    return render(request, 'wallet/manager_wallet.html', {'wallet': wallet, 'transactions': transactions})
+    rtransactions = WalletTransaction.objects.filter(receiver=request.user,).order_by('-created_at')
+    stransactions = WalletTransaction.objects.filter(sender=request.user,).order_by('-created_at')
+    return render(request, 'wallet/manager_wallet.html', {'wallet': wallet, 'transactions': rtransactions,'tran':stransactions})
 
 
 

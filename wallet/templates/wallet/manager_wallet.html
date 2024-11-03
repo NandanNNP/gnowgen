@@ -29,10 +29,20 @@
 </div>
 
 <div class="transactions">
-    <h2>Recent Transactions</h2>
+    <h2>Recent Transactions from admin</h2>
     {% for transaction in transactions %}
         <div class="transaction">
             <p>{{ transaction.sender.username }} sent {{ transaction.amount }} INR on {{ transaction.created_at }}</p>
+        </div>
+    {% empty %}
+        <p>No recent transactions found.</p>
+    {% endfor %}
+</div>
+<div class="transactions">
+    <h2>Recent Transactions to Customers</h2>
+    {% for transaction in tran %}
+        <div class="transaction">
+            <p>{{ transaction.receiver.username }} Recieved {{ transaction.amount }} INR on {{ transaction.created_at }}</p>
         </div>
     {% empty %}
         <p>No recent transactions found.</p>

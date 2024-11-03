@@ -165,10 +165,8 @@ def view_schedule(request):
 @login_required
 def send_notification_to_manager(request):
     # Employee sends notification to manager after completing waste collection
-    if request.method == 'POST':
-        customer_name = request.POST.get('customer_name')
-        amount = request.POST.get('amount')
-        message = f"Collected waste from {customer_name}. Transfer amount {amount} to customer's account."
+    if request.method == 'POST':        
+        message = request.POST.get('message')
         manager = CustomUser.objects.filter(user_type=3).first()  # Assuming user_type=3 for Manager
         
         Notification.objects.create(user=manager, message=message)

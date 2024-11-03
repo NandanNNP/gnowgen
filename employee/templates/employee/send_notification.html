@@ -8,11 +8,9 @@
     <h1>Send Notification to Manager</h1>
     <form method="post">
         {% csrf_token %}
-        <label for="customer_name">Customer Name:</label>
-        <input type="text" name="customer_name" id="customer_name" required>
-        <br>
-        <label for="amount">Amount:</label>
-        <input type="number" name="amount" id="amount" required>
+        <label for="message">Enter message:</label>
+        <textarea  name="message" id="message" required>
+        </textarea>
         <br>
         <button type="submit">Send Notification</button>
     </form>
