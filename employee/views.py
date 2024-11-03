@@ -170,6 +170,7 @@ def send_notification_to_manager(request):
         amount = request.POST.get('amount')
         message = f"Collected waste from {customer_name}. Transfer amount {amount} to customer's account."
         manager = CustomUser.objects.filter(user_type=3).first()  # Assuming user_type=3 for Manager
+        
         Notification.objects.create(user=manager, message=message)
         messages.success(request, "Notification sent to manager.")
         return redirect('employee:employee_dashboard')
@@ -225,7 +226,8 @@ def collect(request, booking_id):
                 user=manager,
                 message=f"Transfer {total_amount} to {booking.customer.username}'s wallet for {collected_weight} kg of {waste_type} collected.",
                 is_fund_transfer=True,
-                amount=total_amount
+                amount=total_amount,
+                rvid=booking.customer.id
             )
 
             messages.success(request, "Collection data submitted successfully. Notification sent to manager.")

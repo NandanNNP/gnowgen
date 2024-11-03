@@ -61,6 +61,7 @@ class Notification(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     is_fund_transfer = models.BooleanField(default=False)
     amount=models.FloatField(default=0.00,null=True) 
+    rvid=models.TextField(null=True)
 
     def __str__(self):
         return f"Notification for {self.user.username} at {self.created_at}"
