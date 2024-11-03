@@ -40,7 +40,51 @@
             font-size: 16px;
             margin: 5px;
         }
+        .input-box {
+            width: 80%;
+            margin: 10px 0;
+        }
+        .submit-button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .submit-button:hover {
+            background-color: #218838;
+        }
     </style>
+    <script>
+        function validateForm() {
+            const amount = parseFloat(document.getElementById("amount").value);
+            const walletBalance = parseFloat("{{ wallet.balance|default:"0.00" }}"); // Pass wallet balance from Django context
+            const upiID = document.getElementById("upi_id").value;
+            const upiPattern = /^[\w.-]+@[\w.-]+$/;  // Basic UPI ID format
+
+            // Validate amount
+            if (amount <= 0) {
+                alert("Please enter a valid amount greater than zero.");
+                return false;
+            }
+
+            // Check if amount is greater than wallet balance
+            if (amount > walletBalance) {
+                alert("Insufficient balance. Please enter an amount less than or equal to your wallet balance.");
+                return false;
+            }
+
+            // Validate UPI ID
+            if (!upiPattern.test(upiID)) {
+                alert("Please enter a valid UPI ID (e.g., example@upi).");
+                return false;
+            }
+
+            // Confirm submission
+            alert("Withdrawal request sent successfully!");
+            return true;
+        }
+    </script>
 </head>
 <body>
 
@@ -51,11 +95,13 @@
     <!-- Withdraw Money Section -->
     <div class="withdraw-section">
         <h2>Withdraw Money to Bank</h2>
-        <form method="POST" action="{% url 'wallet:withdraw_money' %}">
+        <form method="POST" action="{% url 'wallet:withdraw_money' %}" onsubmit="return validateForm()">
             {% csrf_token %}
-            <input type="number" name="amount" class="input-box" placeholder="Amount to Withdraw" step="0.01" min="0">
-            <button type="submit" class="submit-button">Withdraw</button>
+            <input type="number" id="amount" name="amount" class="input-box" placeholder="Amount to Withdraw" step="0.01" min="0" required>
+            <input type="text" id="upi_id" name="upi_id" class="input-box" placeholder="Enter your UPI ID" required>
+            <button type="submit" class="submit-button">Request Withdrawal</button>
         </form>
+        
     </div>
 
     <!-- Transaction History Section -->
@@ -64,9 +110,11 @@
         {% if transactions %}
             {% for transaction in transactions %}
                 <div class="transaction">
-                    <p><strong>Type:</strong> {{ transaction.transaction_type }}</p>
                     <p><strong>Amount:</strong> {{ transaction.amount }} INR</p>
-                    <p><strong>Date:</strong> {{ transaction.created_at }}</p>
+                    <p><strong>Date:</strong> {{ transaction.updated_at|date:"d M Y, H:i" }}</p>
+                    {% if transaction.transaction_type == "withdrawal" %}
+                        <p><strong>Status:</strong> {{ transaction.get_status_display }}</p>
+                    {% endif %}
                 </div>
             {% endfor %}
         {% else %}

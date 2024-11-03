@@ -65,8 +65,9 @@
       <img src="{% static 'images/create_employee.png' %}" alt="Create Employee" class="icon" onclick="createEmployee()">
       <img src="{% static 'images/verify_employee.png' %}" alt="Verify Employee" class="icon" onclick="verifyEmployee()">
       <img src="{% static 'images/wallet.png' %}" alt="Manage Wallet" class="icon" onclick="manageWallet()"> <!-- Updated Wallet Icon -->
+      <img src="{% static 'images/withdraw_approval.png' %}" alt="Approve Withdrawals" class="icon" onclick="approveWithdrawals()"> <!-- New Icon for Withdrawal Approval -->
       <img src="{% static 'images/settings.png' %}" alt="Settings" class="icon" onclick="showSettingsForm()">
-      <img src="{% static 'images/verified_users.png' %}" alt="Verified Employees" class="icon" onclick="viewVerifiedEmployees()"> <!-- New Icon for Verified Employees -->
+      <img src="{% static 'images/verified_users.png' %}" alt="Verified Employees" class="icon" onclick="viewVerifiedEmployees()"> <!-- Icon for Verified Employees -->
       <img src="{% static 'images/notifications.png' %}" alt="Notifications" class="icon" onclick="viewNotifications()"> <!-- Icon for Notifications -->
     </div>
 
@@ -102,7 +103,12 @@
 
     function manageWallet() {
       // Navigate to the wallet management page
-      window.location.href = "{% url 'wallet:manager_wallet' %}"; <!-- Updated to wallet URL -->
+      window.location.href = "{% url 'wallet:manager_wallet' %}";
+    }
+
+    function approveWithdrawals() {
+      // Navigate to the withdrawal approval page
+      window.location.href = "{% url 'wallet:withdraw_approval' %}";  <!-- New URL for Withdrawal Approval -->
     }
 
     function showSettingsForm() {

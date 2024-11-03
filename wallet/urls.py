@@ -11,5 +11,7 @@ urlpatterns = [
     path('manager-wallet/', views.manager_wallet, name='manager_wallet'),
     path('transaction-history/', views.transaction_history, name='transaction_history'),  # New URL
     path('transfer_funds_to_customer/', views.transfer_funds_to_customer, name='transfer_funds_to_customer'),
+    path('withdraw/approval/', views.approve_withdrawals, name='withdraw_approval'),
+    #path('withdraw/approve/', views.approve_withdrawals, name='approve_withdrawals'),
     
 ]

@@ -91,6 +91,8 @@ def notifications_view(request):
     return render(request, 'customer/notifications.html', {'notifications': notifications})
 
 
+
+
 def report(request):
     # You can add your report logic here
     return render(request, 'customer/report.html')

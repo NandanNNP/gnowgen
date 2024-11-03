@@ -38,6 +38,7 @@
         font-size: 20px;
         margin: 15px 0;
         color: green;
+        text-decoration: none;
       }
       .function-link {
         display: block;
@@ -89,7 +90,7 @@
 
       <!-- Wallet Section -->
       <div class="wallet-section">
-        <p>Wallet Balance: {{ wallet.balance|default:"0.00" }} INR</p>  <!-- Display wallet balance -->
+         <a href="{% url 'wallet:withdraw_money' %}" style="color: #4CAF50; text-decoration: none;">Wallet Balance: {{ wallet.balance|default:"0.00" }} INR</a>  <!-- Display wallet balance -->
       </div>
 
       <!-- Dashboard Links -->

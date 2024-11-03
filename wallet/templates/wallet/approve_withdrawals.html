@@ -1,0 +1,68 @@
+<!-- wallet/templates/wallet/approve_withdrawals.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Approve Withdrawals</title>
+    <style>
+        .container {
+            width: 80%;
+            margin: auto;
+            font-family: Arial, sans-serif;
+        }
+        .withdraw-request {
+            border-bottom: 1px solid #ccc;
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .qr-code {
+            width: 100px;
+            height: 100px;
+        }
+        .approve-button, .cancel-button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            color: white;
+        }
+        .approve-button {
+            background-color: #28a745;
+            margin-right: 8px;
+        }
+        .cancel-button {
+            background-color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Pending Withdrawals</h1>
+    {% for request in pending_withdrawals %}
+        <div class="withdraw-request">
+            <div>
+                <p><strong>Customer:</strong> {{ request.customer.username }}</p>
+                <p><strong>Amount:</strong> {{ request.amount }} INR</p>
+                <p><strong>UPI ID:</strong> {{ request.upi_id }}</p>
+                <p><strong>Date:</strong> {{ request.created_at|date:"d M Y, H:i" }}</p>
+            </div>
+            <div>
+                <img src="{{ request.qr_code.url }}" alt="QR Code" class="qr-code">
+                <form method="POST" action="{% url 'wallet:withdraw_approval' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="withdraw_id" value="{{ request.id }}">
+                    <button type="submit" name="action" value="approve" class="approve-button">Approve & Confirm Transfer</button>
+                    <button type="submit" name="action" value="cancel" class="cancel-button">Cancel Request</button>
+                </form>
+            </div>
+        </div>
+    {% empty %}
+        <p>No pending withdrawal requests.</p>
+    {% endfor %}
+</div>
+
+</body>
+</html>
