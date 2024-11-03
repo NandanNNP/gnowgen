@@ -2,26 +2,115 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Transfer Funds to Customer</title>
+    <style>
+        /* Basic reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Page styling */
+        body {
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Form container styling */
+        .form-container {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            text-align: center;
+        }
+
+        /* Form title styling */
+        .form-container h1 {
+            color: #333;
+            margin-bottom: 1.5rem;
+            font-size: 24px;
+        }
+
+        /* Label styling */
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* Input and select styling */
+        select, input[type="number"] {
+            width: 100%;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        /* Submit button styling */
+        .submit-button {
+            width: 100%;
+            padding: 0.8rem;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-button:hover {
+            background-color: #45a049;
+        }
+
+        /* Confirmation dialog styling */
+        .confirmation-message {
+            font-size: 14px;
+            color: #666;
+            margin-top: 0.5rem;
+        }
+    </style>
 </head>
 <body>
-    <h2>Transfer Funds to Customer</h2>
-    <form method="POST">
-        {% csrf_token %}
-        <label for="receiver_id">Select Customer:</label>
-        <select name="receiver_id" required>
-            {% for customer in customers %}
-                <option value="{{ customer.id }}">{{ customer.username }}</option>
-            {% endfor %}
-        </select>
-        
-        <label for="amount">Amount:</label>
-        <input type="number" name="amount" step="0.01" required>
-        
-        <button type="submit">Transfer Funds</button>
-    </form>
+    <div class="form-container">
+        <h1>Transfer Funds to Customer</h1>
+        <form method="POST" onsubmit="return confirmTransfer()">
+            {% csrf_token %}
+            <label for="receiver_id">Select Customer:</label>
+            <select name="receiver_id" id="receiver_id">
+                {% for customer in customers %}
+                    <option value="{{ customer.id }}" {% if customer.id|stringformat:"s" == receiver_id %}selected{% endif %}>
+                        {{ customer.username }}
+                    </option>
+                {% endfor %}
+            </select>
 
-    <a href="{% url 'wallet:manager_wallet' %}">Back to Wallet</a>
+            <label for="amount">Amount:</label>
+            <input type="number" name="amount" id="amount" value="{{ amount }}" required>
+
+            <button type="submit" class="submit-button">Transfer Funds</button>
+        </form>
+        <p class="confirmation-message">Please ensure the details are correct before proceeding.</p>
+    </div>
+
+    <script>
+        // Confirmation dialog on form submission
+        function confirmTransfer() {
+            const amount = document.getElementById("amount").value;
+            const customer = document.getElementById("receiver_id").options[document.getElementById("receiver_id").selectedIndex].text;
+            return confirm(`Are you sure you want to transfer ₹${amount} to ${customer}?`);
+        }
+    </script>
 </body>
 </html>

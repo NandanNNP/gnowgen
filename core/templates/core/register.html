@@ -1,7 +1,150 @@
 <!-- core/templates/core/register.html -->
-<h2>Register</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Register</button>
-</form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <style>
+        /* Basic reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Page styling */
+        body {
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        /* Form container styling */
+        .form-container {
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            text-align: center;
+        }
+
+        /* Form title styling */
+        .form-container h2 {
+            margin-bottom: 1.5rem;
+            color: #333;
+        }
+
+        /* Label styling */
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* Input field styling */
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #4CAF50;
+        }
+
+        /* Submit button styling */
+        button[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        /* Error message styling */
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 0.5rem;
+        }
+    </style>
+    <script>
+        // Live validation
+        function validateForm() {
+            const username = document.getElementById("username");
+            const password1 = document.getElementById("password1");
+            const password2 = document.getElementById("password2");
+            const userType = document.getElementById("user_type");
+            let valid = true;
+
+            // Reset error messages
+            document.querySelectorAll('.error-message').forEach(el => el.innerText = '');
+
+            // Validate username
+            if (username.value.trim() === "") {
+                document.getElementById("username-error").innerText = "Username is required.";
+                valid = false;
+            }
+
+            // Validate password
+            if (password1.value.trim() === "") {
+                document.getElementById("password1-error").innerText = "Password is required.";
+                valid = false;
+            }
+
+            // Validate password match
+            if (password1.value !== password2.value) {
+                document.getElementById("password2-error").innerText = "Passwords do not match.";
+                valid = false;
+            }
+
+           
+
+            return valid;
+        }
+    </script>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Register</h2>
+        <form method="post" onsubmit="return validateForm()">
+            {% csrf_token %}
+            
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" class="form-control" required>
+            <div class="error-message" id="username-error"></div>
+
+            <label for="password1">Password:</label>
+            <input type="password" id="password1" name="password1" class="form-control" required>
+            <div class="error-message" id="password1-error"></div>
+
+            <label for="password2">Confirm Password:</label>
+            <input type="password" id="password2" name="password2" class="form-control" required>
+            <div class="error-message" id="password2-error"></div>
+
+
+            <button type="submit">Register</button>
+        </form>
+    </div>
+</body>
+</html>

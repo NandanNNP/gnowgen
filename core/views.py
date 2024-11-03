@@ -3,17 +3,35 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
 from .forms import CustomUserCreationForm
 from django.contrib.auth.decorators import login_required
+from .models import CustomUser
+
 
 def register(request):
     if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect('login')
-    else:
-        form = CustomUserCreationForm()
-    return render(request, 'core/register.html', {'form': form})
+        username = request.POST.get('username')
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
+        user_type = 1
+        
+        # Basic validation checks
+        if not username or not password1 or not password2:
+            messages.error(request, "All fields are required.")
+            return render(request, 'core/register.html')
+
+        if password1 != password2:
+            messages.error(request, "Passwords do not match.")
+            return render(request, 'core/register.html')
+
+        
+
+        # Create the user
+        user = CustomUser(username=username, user_type=user_type)
+        user.set_password(password1)
+        user.save()
+        login(request, user)
+        return redirect('login')
+
+    return render(request, 'core/register.html')
 
 # core/views.py
 from django.contrib.auth import authenticate, login

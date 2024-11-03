@@ -2,22 +2,107 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manager Notifications</title>
+    <style>
+        /* Basic reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Page styling */
+        body {
+            background-color: #f0f2f5;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* Title styling */
+        h1 {
+            margin-bottom: 20px;
+            font-size: 28px;
+            color: #4CAF50;
+        }
+
+        /* Notification list styling */
+        ul {
+            list-style-type: none;
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 20px;
+
+        }
+
+        li {
+            background: #fff;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Button styling */
+        .transfer-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .transfer-button:hover {
+            background-color: #45a049;
+        }
+
+        /* No notifications message */
+        .no-notifications {
+            text-align: center;
+            color: #888;
+            font-size: 16px;
+        }
+
+        /* Link to send notification */
+        .send-notification {
+            margin-top: 20px;
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .send-notification:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
     <h1>Notifications from Employees</h1>
     <ul>
         {% for notification in notifications %}
             <li>
-                {{ notification.message }} - {{ notification.created_at }}
+                <span>{{ notification.message }} - {{ notification.created_at }}</span>
                 {% if notification.is_fund_transfer %}
-                    <a href="{% url 'wallet:transfer_funds_to_customer' %}?receiver_id={{ notification.user.id }}&amount={{ notification.amount }} ">Transfer Funds</a>
+                    <a class="transfer-button" href="{% url 'wallet:transfer_funds_to_customer' %}?receiver_id={{ notification.rvid }}&amount={{ notification.amount }}">Transfer {{ notification.amount    }}</a>
                 {% endif %}
             </li>
         {% empty %}
-            <li>No notifications</li>
+            <li class="no-notifications">No notifications</li>
         {% endfor %}
     </ul>
-    <a href="{% url 'manager:send_notification_to_employee' %}">Send Notification to Employee</a>
+    <a class="send-notification" href="{% url 'manager:send_notification_to_employee' %}">Send Notification to Employee</a>
 </body>
 </html>
