@@ -1,73 +1,58 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unverified Customers</title>
-    <style>
-        .search-bar {
-            margin-bottom: 20px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 10px;
-            text-align: left;
-            border: 1px solid #ddd;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Unverified Customers</h1>
+{% extends "layout.html" %}
+{% load static %}
 
-        <div class="search-bar">
-            <input type="text" id="searchInput" placeholder="Search by username or email" />
-        </div>
+{% block css %}
+<link rel="stylesheet" href="{% static "css/employee.css" %}">
+{% endblock %}
 
-        {% if unverified_users %}
-        <table id="userTable">
-            <thead>
-                <tr>
-                    <th>Username</th>
-                    <th>Email</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for user in unverified_users %}
-                <tr>
-                    <td class="username">{{ user.username }}</td>
-                    <td class="email">{{ user.email }}</td>
-                    <td>
-                        <a href="{% url 'employee:verify_user' user.id %}">Verify</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        {% else %}
-        <p>No unverified customers found.</p>
-        {% endif %}
-        <a href="{% url 'employee:employee_dashboard' %}">Back to Dashboard</a>
+{% block content %}
+<div class="container">
+    <h1>Unverified Customers</h1>
+
+    <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Search by username or email" />
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $("#searchInput").on("keyup", function() {
-                var value = $(this).val().toLowerCase();
-                $("#userTable tbody tr").filter(function() {
-                    $(this).toggle($(this).find(".username").text().toLowerCase().indexOf(value) > -1 ||
-                                   $(this).find(".email").text().toLowerCase().indexOf(value) > -1);
-                });
+    {% if unverified_users %}
+    <table id="userTable">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in unverified_users %}
+            <tr>
+                <td class="username">{{ user.username }}</td>
+                <td class="email">{{ user.email }}</td>
+                <td>
+                    <a href="{% url 'employee:verify_user' user.id %}" class="verify-link">Verify</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="no-data">No unverified customers found.</p>
+    {% endif %}
+
+    <div class="back-link-container">
+        <a href="{% url 'employee:employee_dashboard' %}" class="back-link">Back to Dashboard</a>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $("#searchInput").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#userTable tbody tr").filter(function() {
+                $(this).toggle($(this).find(".username").text().toLowerCase().indexOf(value) > -1 ||
+                               $(this).find(".email").text().toLowerCase().indexOf(value) > -1);
             });
         });
-    </script>
-</body>
-</html>
+    });
+</script>
+{% endblock %}

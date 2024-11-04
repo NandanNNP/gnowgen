@@ -1,35 +1,92 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scan QR Code</title>
-    <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
-        video {
-            width: 300px;
-            height: auto;
-            border: 2px solid #ccc;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        h2 {
-            margin-bottom: 10px;
-        }
-        .manual-entry {
-            margin-top: 20px;
-        }
-    </style>
-</head>
-<body>
+<!-- employee/templates/employee/scan_qr_code.html -->
+{% extends "layout.html" %}
+{% load static %}
+
+{% block css %}
+<style>
+    /* Main container styling */
+    .dashboard-container {
+        max-width: 600px;
+        margin: 30px auto;
+        padding: 30px;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    /* Page heading styling */
+    .dashboard-container h2 {
+        font-size: 28px;
+        color: #333;
+        margin-bottom: 15px;
+    }
+
+    /* Description styling */
+    .dashboard-container p {
+        font-size: 16px;
+        color: #666;
+        margin-bottom: 20px;
+    }
+
+    /* Video element styling */
+    #preview {
+        width: 100%;
+        max-width: 400px;
+        height: auto;
+        border: 2px solid #007bff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        margin-bottom: 20px;
+    }
+
+    /* Manual entry section */
+    .manual-entry {
+        margin-top: 30px;
+        text-align: center;
+    }
+
+    .manual-entry h3 {
+        font-size: 20px;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .manual-entry label {
+        font-size: 16px;
+        color: #555;
+    }
+
+    .manual-entry input[type="text"] {
+        padding: 10px;
+        width: 80%;
+        max-width: 300px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 14px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+    .manual-entry button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .manual-entry button:hover {
+        background-color: #0056b3;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
     <h2>Scan QR Code</h2>
     <p>Align the QR code within the camera frame to scan and proceed to the collection form.</p>
     <video id="preview"></video> <!-- Video element for scanning -->
@@ -92,5 +149,5 @@
             return false;
         }
     </script>
-</body>
-</html>
+</div>
+{% endblock %}

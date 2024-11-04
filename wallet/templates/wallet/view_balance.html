@@ -1,4 +1,72 @@
-<h2>Wallet Balance: {{ wallet.balance }}</h2>
-{% if request.user.user_type == 1 %}
-    <a href="{% url 'wallet:withdraw_money' %}">Withdraw Money</a>
-{% endif %}
+{% extends "layout.html" %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static "css/customer.css" %}">      
+<style>
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 80vh;
+    }
+
+    .card {
+        max-width: 400px;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        background-color: #ffffff;
+        transition: transform 0.3s;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+    .card-title {
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 15px;
+    }
+
+    .balance-amount {
+        font-size: 28px;
+        color: #007bff;
+        margin-bottom: 20px;
+    }
+
+    .btn-outline-primary {
+        display: inline-block;
+        padding: 10px 20px;
+        border: 2px solid #28a745;
+        border-radius: 5px;
+        background-color: #28a745;
+        color: #fff;
+        text-decoration: none;
+        font-weight: bold;
+        transition: all 0.3s;
+    }
+
+    .btn-outline-primary:hover {
+        background-color: #218838;
+        color: #fff;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <h2 class="card-title">Wallet Balance</h2>
+        <h3 class="balance-amount">{{ wallet.balance | floatformat:2 }}</h3>
+
+        {% if request.user.user_type == 1 %}
+            <a href="{% url 'wallet:withdraw_money' %}" class="btn btn-outline-primary">
+                Withdraw Money
+            </a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

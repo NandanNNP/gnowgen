@@ -1,24 +1,124 @@
-<!-- employee/templates/employee/verify_user.html -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Verify User</title>
-</head>
-<body>
+{% extends "layout.html" %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static "css/employee.css" %}">
+<style>
+    /* Style for the verification container */
+    .dashboard-container {
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 30px;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    /* Headings styling */
+    .dashboard-container h2 {
+        color: #2c3e50;
+        font-size: 28px;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    .dashboard-container h3 {
+        color: #555;
+        font-size: 20px;
+        margin: 20px 0 15px;
+    }
+
+    /* Form and input styling */
+    .address-form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        text-align: left; /* Align text to the left for better readability */
+    }
+
+    .address-form label {
+        font-weight: bold; /* Make labels bold for emphasis */
+        margin-bottom: 5px; /* Space between label and input */
+    }
+
+    .address-form input[type="text"], 
+    .address-form input[type="email"], 
+    .address-form input[type="number"],
+    .address-form textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        transition: border-color 0.3s ease;
+    }
+
+    .address-form input[type="text"]:focus, 
+    .address-form input[type="email"]:focus, 
+    .address-form input[type="number"]:focus,
+    .address-form textarea:focus {
+        border-color: #007bff;
+        outline: none;
+    }
+
+    /* Button styling */
+    .submit-address-btn,
+    .back-link {
+        display: inline-block;
+        width: 100%;
+        padding: 12px;
+        border-radius: 5px;
+        text-align: center;
+        font-weight: bold;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+        cursor: pointer;
+    }
+
+    .submit-address-btn {
+        background-color: #069348;
+        color: #fff;
+        border: none;
+        margin-top: 15px;
+    }
+
+    .submit-address-btn:hover {
+        background-color: #04602f;
+    }
+
+    .back-link {
+        background-color: #ffc107;
+        color: #fff;
+        margin-top: 10px;
+    }
+
+    .back-link:hover {
+        background-color: #e0a800;
+        color:#fff;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
     <h2>Verify User</h2>
-    <p>Are you sure you want to verify {{ user.username }}?</p>
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit">Verify</button>
-        <a href="{% url 'employee:verify_user_list' %}">Cancel</a>
-    </form>
+    <p>Are you sure you want to verify <strong>{{ user.username }}</strong>?</p>
 
     <h3>Enter Address Details</h3>
-    <form method="post">
+    <form method="post" class="address-form">
         {% csrf_token %}
-        {{ address_form.as_p }}  <!-- Render the address form -->
-        <button type="submit">Submit Address</button>
+        {{ address_form.non_field_errors }}
+        {% for field in address_form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% for error in field.errors %}
+                    <span class="error">{{ error }}</span>
+                {% endfor %}
+            </div>
+        {% endfor %}
+        <button type="submit" class="submit-address-btn">Submit Address</button>
+        <a href="{% url 'employee:verify_user_list' %}" class="back-link">Cancel</a>
     </form>
-</body>
-</html>
+</div>
+{% endblock %}

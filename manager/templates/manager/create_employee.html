@@ -1,6 +1,95 @@
-<h2>Create Employee</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Create Employee</button>
-</form>
+<!-- employee/templates/employee/create_employee.html -->
+{% extends "layout.html" %}
+{% load static %}
+
+{% block css %}
+<style>
+    /* Main dashboard container styling */
+    .dashboard-container {
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 30px;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        font-family: Arial, sans-serif;
+    }
+
+    /* Heading styling */
+    h2 {
+        text-align: center;
+        color: #2c3e50;
+        margin-bottom: 20px;
+        font-size: 28px;
+    }
+
+    /* Form container styling */
+    .form-container {
+        margin-top: 20px;
+    }
+
+    /* Submit button styling */
+    .submit-button {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 5px;
+        background-color: #007bff;
+        color: #ffffff;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin-top: 15px;
+    }
+
+    .submit-button:hover {
+        background-color: #0056b3; /* Darker shade on hover */
+    }
+
+    /* Alert styling for error messages */
+    .alert {
+        margin-bottom: 20px;
+        padding: 15px;
+        border: 1px solid #f44336;
+        background-color: #f9d6d5;
+        color: #d8000c;
+        border-radius: 5px;
+    }
+
+    /* Form field styling */
+    form p {
+        margin: 12px 0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <h2>Create Employee</h2>
+    <div class="form-container">
+        <form method="post">
+            {% csrf_token %}
+            
+            <!-- Display form errors if any -->
+            {% if form.errors %}
+                <div class="alert">
+                    <ul>
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            
+            <!-- Render the form fields -->
+            {{ form.as_p }}
+
+            <button type="submit" class="submit-button">Create Employee</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

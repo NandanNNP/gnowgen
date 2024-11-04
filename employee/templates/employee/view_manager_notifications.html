@@ -1,41 +1,26 @@
-<!-- employee/templates/employee/view_manager_notifications.html -->
+{% extends "layout.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manager Notifications</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        h2 {
-            text-align: center;
-        }
-        .notification {
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 5px;
-        }
-    </style>
-</head>
-<body>
+
+{% block css %}
+<link rel="stylesheet" href="{% static "css/employee.css" %}">       
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
     <h2>Manager Notifications</h2>
     <div>
         {% for notification in notifications %}
             <div class="notification">
                 <strong>Message:</strong> {{ notification.message }}<br>
-                <strong>Received At:</strong> {{ notification.created_at }}<br>
+                <strong>Received At:</strong> {{ notification.created_at|date:"Y-m-d H:i:s" }}<br>
                 {% if notification.date %}
-                    <strong>Collection Date:</strong> {{ notification.date }}<br>
+                    <strong>Collection Date:</strong> {{ notification.date|date:"Y-m-d" }}<br>
                 {% endif %}
             </div>
         {% empty %}
             <p>No notifications from the manager.</p>
         {% endfor %}
     </div>
-</body>
-</html>
+</div>
+<br><br><br><br>
+{% endblock %}
