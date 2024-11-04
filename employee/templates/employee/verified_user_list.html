@@ -1,15 +1,85 @@
 <!-- employee/templates/employee/verified_user_list.html -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Verified Users</title>
-</head>
-<body>
+{% extends "layout.html" %}
+{% load static %}
+
+{% block css %}
+<style>
+    /* Style for the verified user list container */
+    .dashboard-container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 30px;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Heading style */
+    .dashboard-container h2 {
+        text-align: center;
+        color: #2c3e50;
+        font-size: 28px;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    /* Table styling */
+    .verified-users-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    .verified-users-table th, .verified-users-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    .verified-users-table th {
+        background-color: #069348;
+        color: #ffffff;
+        font-weight: bold;
+    }
+    .verified-users-table td {
+        color: #555;
+    }
+    .verified-users-table tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    /* No users found message */
+    .no-users-message {
+        text-align: center;
+        font-size: 18px;
+        color: #888;
+        margin-top: 20px;
+    }
+
+    /* Back to Dashboard button */
+    .back-link {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #069348;
+        color: #ffffff;
+        border-radius: 5px;
+        text-align: center;
+        text-decoration: none;
+        font-weight: bold;
+        margin-top: 20px;
+        transition: background-color 0.3s;
+    }
+    .back-link:hover {
+        background-color: #04602f;
+        color:#fff;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
     <h2>Verified Users and Their Addresses</h2>
 
     {% if verified_users %}
-        <table>
+        <table class="verified-users-table">
             <tr>
                 <th>Username</th>
                 <th>Street</th>
@@ -28,9 +98,9 @@
             {% endfor %}
         </table>
     {% else %}
-        <p>No verified users found.</p>
+        <p class="no-users-message">No verified users found.</p>
     {% endif %}
-    
-    <a href="{% url 'employee:employee_dashboard' %}">Back to Dashboard</a>
-</body>
-</html>
+
+    <a href="{% url 'employee:employee_dashboard' %}" class="back-link">Back to Dashboard</a>
+</div>
+{% endblock %}

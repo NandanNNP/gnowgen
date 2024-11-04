@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'manager',
     'admin_module',
     'wallet',
+    'widget_tweaks',
     
 ]
 
@@ -61,7 +62,7 @@ ROOT_URLCONF = 'dumpex.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -69,6 +70,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'dumpex.context_processors.user_navigation.user_navigation',
             ],
         },
     },
@@ -82,7 +84,12 @@ AUTH_USER_MODEL = 'core.CustomUser'
 
 # dumpex/settings.py
 LOGIN_REDIRECT_URL = 'home'  # Redirect here by default after login
+LOGOUT_REDIRECT_URL = 'login'  # Redirects to the login page after logout
+
   
+
+
+
 MEDIA_ROOT = BASE_DIR / 'media'
 
 MEDIA_URL = '/media/'
@@ -143,7 +150,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'core', 'static'),  # Adjust path if needed
+    os.path.join(BASE_DIR,'static'),  # Adjust path if needed
 ]
 
 # Default primary key field type

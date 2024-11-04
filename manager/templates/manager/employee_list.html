@@ -1,21 +1,93 @@
-<h2>Employee List</h2>
-<table>
-    <tr>
-        <th>Username</th>
-        <th>Email</th>
-        <th>Verified</th>
-        <th>Actions</th>
-    </tr>
-    {% for employee in employees %}
-    <tr>
-        <td>{{ employee.username }}</td>
-        <td>{{ employee.email }}</td>
-        <td>{{ employee.is_verified }}</td>
-        <td>
-            {% if not employee.is_verified %}
-                <a href="{% url 'manager:verify_employee' employee.id %}">Verify Employee</a>
-            {% endif %}
-        </td>
-    </tr>
-    {% endfor %}
-</table>
+{% extends "layout.html" %}
+{% load static %}
+
+{% block css %}
+<style>
+    .dashboard-container {
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 30px;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        font-family: Arial, sans-serif;
+    }
+
+    h2 {
+        text-align: center;
+        color: #2c3e50;
+        margin-bottom: 20px;
+        font-size: 28px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    table th, table td {
+        padding: 12px;
+        border: 1px solid #ddd;
+        text-align: left;
+    }
+
+    table th {
+        background-color: #f0f0f0;
+        font-weight: bold;
+        color: #333;
+    }
+
+    table tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    table tbody tr:hover {
+        background-color: #eaeaea;
+    }
+
+    .action-link {
+        color: #007bff;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .action-link:hover {
+        text-decoration: underline;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <h2>Employee List</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Verified</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for employee in employees %}
+            <tr>
+                <td>{{ employee.username }}</td>
+                <td>{{ employee.email }}</td>
+                <td>{{ employee.is_verified|yesno:"Yes,No" }}</td>
+                <td>
+                    {% if not employee.is_verified %}
+                        <a href="{% url 'manager:verify_employee' employee.id %}" class="action-link">Verify Employee</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" style="text-align: center; color: #999;">No employees found</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

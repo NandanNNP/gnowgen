@@ -1,0 +1,206 @@
+.dashboard-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.top-section {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.hello-text {
+    font-size: 24px;
+    color: #2c3e50;
+}
+
+.username-display {
+    font-size: 20px;
+    color: #34495e;
+    margin-top: 5px;
+}
+
+.wallet-section {
+    text-align: center;
+    padding: 15px;
+    border: 1px solid #e1e1e1;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.wallet-balance {
+    font-size: 18px;
+    color: #27ae60;
+}
+
+.recent-activities, .notifications-section {
+    margin-bottom: 20px;
+}
+
+.recent-activities h3, .notifications-section h3 {
+    font-size: 20px;
+    color: #2980b9;
+    margin-bottom: 10px;
+}
+
+.activity-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.notification-item {
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    border-left: 4px solid #3498db;
+}
+
+.action-buttons {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.btn {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    margin: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn:hover {
+    background-color: #2980b9;
+}
+
+
+
+
+/* notification */
+
+body{
+    background-color: #c0392b;
+}
+.notifications-container {
+    max-width: 600px;
+    margin: auto;
+    font-family: Arial, sans-serif;
+}
+.notification-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+.notification-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.notification-content {
+    flex: 1;
+}
+.notification-date {
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 5px;
+}
+.notification-message {
+    font-size: 16px;
+    color: #333;
+}
+.delete-form {
+    margin: 0;
+}
+.delete-button {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+.delete-button:hover {
+    background-color: #c0392b;
+}
+.no-notifications {
+    text-align: center;
+    font-size: 16px;
+    color: #777;
+    margin-top: 20px;
+}
+
+
+
+
+/* wallet.css */
+
+.wallet-container {
+    max-width: 500px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+.wallet-title {
+    font-size: 26px;
+    color: #2c3e50;
+    margin-bottom: 15px;
+}
+
+.wallet-details {
+    margin-bottom: 20px;
+}
+
+.wallet-balance, .wallet-rewards {
+    font-size: 18px;
+    color: #27ae60;
+    margin: 10px 0;
+}
+
+.wallet-balance span, .wallet-rewards span {
+    font-weight: bold;
+    color: #2980b9;
+}
+
+.withdraw-form {
+    margin-top: 20px;
+}
+
+.withdraw-button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.withdraw-button:hover {
+    background-color: #2980b9;
+}
+
+.withdraw-form p {
+    text-align: left;
+    font-size: 16px;
+    color: #34495e;
+}

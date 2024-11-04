@@ -1,93 +1,61 @@
+{% extends "layout.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Wallet - Withdraw Money</title>
-    <style>
-        /* Basic styling for layout */
-        .container {
-            font-family: Arial, sans-serif;
-            width: 60%;
-            margin: auto;
-            text-align: center;
-            padding: 20px;
-        }
-        .balance {
-            font-size: 24px;
-            color: green;
-            margin-bottom: 20px;
-        }
-        .transaction-history {
-            margin-top: 30px;
-            text-align: left;
-        }
-        .transaction-history h2 {
-            margin-bottom: 10px;
-        }
-        .transaction {
-            padding: 10px;
-            border-bottom: 1px solid #ccc;
-        }
-        .transaction p {
-            margin: 5px 0;
-        }
-        .withdraw-section {
-            margin-top: 20px;
-        }
-        .input-box, .submit-button {
-            padding: 10px;
-            font-size: 16px;
-            margin: 5px;
-        }
-        .input-box {
-            width: 80%;
-            margin: 10px 0;
-        }
-        .submit-button {
-            background-color: #28a745;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        .submit-button:hover {
-            background-color: #218838;
-        }
-    </style>
-    <script>
-        function validateForm() {
-            const amount = parseFloat(document.getElementById("amount").value);
-            const walletBalance = parseFloat("{{ wallet.balance|default:"0.00" }}"); // Pass wallet balance from Django context
-            const upiID = document.getElementById("upi_id").value;
-            const upiPattern = /^[\w.-]+@[\w.-]+$/;  // Basic UPI ID format
+{% block css %}
+<link rel="stylesheet" href="{% static "css/customer.css" %}">      
+<style>
+    /* Basic styling for layout */
+    .container {
+        font-family: Arial, sans-serif;
+        width: 60%;
+        margin: auto;
+        text-align: center;
+        padding: 20px;
+    }
+    .balance {
+        font-size: 24px;
+        color: green;
+        margin-bottom: 20px;
+    }
+    .transaction-history {
+        margin-top: 30px;
+        text-align: left;
+    }
+    .transaction-history h2 {
+        margin-bottom: 10px;
+    }
+    .transaction {
+        padding: 10px;
+        border-bottom: 1px solid #ccc;
+    }
+    .transaction p {
+        margin: 5px 0;
+    }
+    .withdraw-section {
+        margin-top: 20px;
+    }
+    .input-box, .submit-button {
+        padding: 10px;
+        font-size: 16px;
+        margin: 5px;
+    }
+    .input-box {
+        width: 80%;
+        margin: 10px 0;
+    }
+    .submit-button {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+    .submit-button:hover {
+        background-color: #218838;
+    }
+</style>
+{% endblock %}
 
-            // Validate amount
-            if (amount <= 0) {
-                alert("Please enter a valid amount greater than zero.");
-                return false;
-            }
-
-            // Check if amount is greater than wallet balance
-            if (amount > walletBalance) {
-                alert("Insufficient balance. Please enter an amount less than or equal to your wallet balance.");
-                return false;
-            }
-
-            // Validate UPI ID
-            if (!upiPattern.test(upiID)) {
-                alert("Please enter a valid UPI ID (e.g., example@upi).");
-                return false;
-            }
-
-            // Confirm submission
-            alert("Withdrawal request sent successfully!");
-            return true;
-        }
-    </script>
-</head>
-<body>
-
+{% block content %}
 <div class="container">
     <!-- Wallet Balance -->
     <p class="balance">Current Wallet Balance: {{ wallet.balance|default:"0.00" }} INR</p>
@@ -101,7 +69,6 @@
             <input type="text" id="upi_id" name="upi_id" class="input-box" placeholder="Enter your UPI ID" required>
             <button type="submit" class="submit-button">Request Withdrawal</button>
         </form>
-        
     </div>
 
     <!-- Transaction History Section -->
@@ -123,5 +90,34 @@
     </div>
 </div>
 
-</body>
-</html>
+<script>
+    function validateForm() {
+        const amount = parseFloat(document.getElementById("amount").value);
+        const walletBalance = parseFloat("{{ wallet.balance|default:"0.00" }}"); // Pass wallet balance from Django context
+        const upiID = document.getElementById("upi_id").value;
+        const upiPattern = /^[\w.-]+@[\w.-]+$/;  // Basic UPI ID format
+
+        // Validate amount
+        if (amount <= 0) {
+            alert("Please enter a valid amount greater than zero.");
+            return false;
+        }
+
+        // Check if amount is greater than wallet balance
+        if (amount > walletBalance) {
+            alert("Insufficient balance. Please enter an amount less than or equal to your wallet balance.");
+            return false;
+        }
+
+        // Validate UPI ID
+        if (!upiPattern.test(upiID)) {
+            alert("Please enter a valid UPI ID (e.g., example@upi).");
+            return false;
+        }
+
+        // Confirm submission
+        alert("Withdrawal request sent successfully!");
+        return true;
+    }
+</script>
+{% endblock %}

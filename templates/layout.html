@@ -1,0 +1,198 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-ng-app="website">
+   <head>
+      <meta charset="utf-8">
+      <title>Home</title>
+      <link rel="SHORTCUT ICON" href="favicon.ico" type="image/vnd.microsoft.icon">
+      <link rel="canonical" href="https://template94867.motopreview.com/">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="preload" as="font" type="font/woff2" crossorigin="" href="fonts/fontawesome-webfont.woff2">
+      <link rel="stylesheet" href="{% static "css/assets.min.css" %}">
+      <style>
+         @import url(//fonts.googleapis.com/css?family=Montserrat:100,100italic,200,200italic,300,300italic,regular,italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic|Poppins:100,100italic,200,200italic,300,300italic,regular,italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic&subset=latin);
+      </style>
+      <link rel="stylesheet" href="{% static "css/styles.css" %}" id="moto-website-style">
+      {% block css %}
+      
+      {% endblock %}
+   </head>
+   <body class="moto-background moto-website_live">
+      <div class="page">
+         <section id="section-content" class="content page-1 moto-section" data-widget="section" data-container="section">
+          {% block navigation %}
+            <div class="moto-widget moto-widget-block moto-spacing-top-small moto-spacing-right-auto moto-spacing-left-auto" data-widget="block" data-spacing="sasa" style="" data-bg-position="left top">
+               <div class="container-fluid">
+                  <div class="row">
+                     <div class="moto-cell col-sm-12" data-container="container">
+                        <div data-widget-id="wid_1580221489_2wy386s66" class="moto-widget moto-widget-spacer moto-preset-default moto-spacing-top-auto moto-spacing-right-auto moto-spacing-bottom-auto moto-spacing-left-auto moto-visible-on_tablet_hidden moto-visible-on_mobile-h_hidden moto-visible-on_mobile-v_hidden" data-widget="spacer" data-preset="default" data-spacing="aaaa" data-visible-on="+desktop">
+                           <div class="moto-widget-spacer-block" style="height:20px">
+                           </div>
+                        </div>
+                        <div class="moto-widget moto-widget-row row-fixed moto-justify-content_center moto-spacing-top-auto moto-spacing-right-auto moto-spacing-bottom-auto moto-spacing-left-auto" data-grid-type="sm" data-widget="row" data-spacing="aaaa" style="" data-bg-position="left top" data-visible-on="-">
+                           <div class="container-fluid">
+                              <div class="row" data-container="container">
+                                 <div class="moto-widget moto-widget-row__column moto-cell col-sm-3 moto-spacing-top-auto moto-spacing-right-auto moto-spacing-bottom-auto moto-spacing-left-auto" style="" data-widget="row.column" data-container="container" data-spacing="aaaa" data-bg-position="left top">
+                                    <div class="moto-widget moto-widget-text moto-preset-default moto-spacing-top-auto moto-spacing-right-auto moto-spacing-bottom-auto moto-spacing-left-auto" data-widget="text" data-preset="default" data-spacing="aaaa" data-visible-on="-" data-animation="">
+                                       <div class="moto-widget-text-content moto-widget-text-editable">
+                                          <p class="moto-text_system_1"><a target="_self" data-action="page" data-id="1" class="moto-link" href="/"><span class="moto-content-image-plugin-wrapper moto-spacing-top-zero moto-spacing-right-small moto-spacing-bottom-zero moto-spacing-left-zero" data-widget="motoimagewidget"><span class="moto-content-image-container">
+                                            <img class="moto-content-image" data-path="2020/01/mt-1963-logo.png" data-id="193" alt="" width="51" height="50" src="{% static "images/mt-1963-logo.png" %}"></span></span></a><a target="_self" href="{% url "core:home" %}" data-action="page" data-id="1" class="moto-link">DumpEx</a></p>
+                                       </div>
+                                    </div>
+                                 </div>
+                                 <div class="moto-widget moto-widget-row__column moto-cell col-sm-9 moto-spacing-top-auto moto-spacing-right-auto moto-spacing-bottom-auto moto-spacing-left-auto" style="" data-widget="row.column" data-container="container" data-spacing="aaaa" data-bg-position="left top">
+                                    <div class="moto-widget moto-widget-row moto-justify-content_center moto-spacing-top-auto moto-spacing-right-auto moto-spacing-bottom-auto moto-spacing-left-auto" data-grid-type="sm" data-widget="row" data-spacing="aaaa" style="" data-bg-position="left top">
+                                       <div class="container-fluid">
+                                          <div class="row" data-container="container">
+                                             {% comment %} <div class="moto-widget moto-widget-row__column moto-cell col-sm-9 moto-spacing-top-auto moto-spacing-right-auto moto-spacing-bottom-auto moto-spacing-left-auto" style="" data-widget="row.column" data-container="container" data-spacing="aaaa" data-bg-position="left top"> {% endcomment %}
+                                                <div data-widget-id="wid_1548763097_wcltb4kqb" class="moto-widget moto-widget-menu moto-preset-default moto-align-right moto-align-center_mobile-h moto-spacing-top-small moto-spacing-right-auto moto-spacing-bottom-small moto-spacing-left-auto" data-preset="default" data-widget="menu">
+                                                   <a href="#" class="moto-widget-menu-toggle-btn"><i class="moto-widget-menu-toggle-btn-icon fa fa-bars"></i></a>
+                                                   <ul class="moto-widget-menu-list moto-widget-menu-list_horizontal">
+                                                    {% for item in navigation %}
+                                                        {% if item.name == 'LOGOUT' %}
+                                                            <li class="moto-widget-menu-item">
+                                                                
+                                                                <form action="{% url 'core:logout' %}" method="post" style="display:inline;">
+                                                                    {% csrf_token %}
+                                                                    <button type="submit" data-action="scroll_to_anchor" data-anchor="our-mission" data-time="0.4" data-moto-widget-actions-scroll-to="" class="moto-widget-menu-link moto-widget-menu-link-level-1 moto-link">Logout</button>
+                                                                </form>
+                                                            </li>
+                                                        {% elif item.name == 'WALLET' %}
+                                                            <li class="moto-widget-menu-item moto-widget-menu-item-has-submenu">
+                                                                <a href="#" data-action="url" class="moto-widget-menu-link moto-widget-menu-link-level-1 moto-widget-menu-link-submenu moto-link"><i class="{{ item.icon }}"></i> {{ item.name }}<span class="fa moto-widget-menu-link-arrow"></span></a>
+                                                                <ul class="moto-widget-menu-sublist">
+                                                                    {% for i in wallet_menu %}
+                                                                    <li class="moto-widget-menu-item">
+                                                                        <a href="{% url i.url %}" data-action="scroll_to_anchor" data-anchor="our-mission" data-time="0.4" data-moto-widget-actions-scroll-to="" class="moto-widget-menu-link moto-widget-menu-link-level-2 moto-link"><i class="{{ i.icon }}"></i> {{ i.name }}</a>
+                                                                    </li>
+                                                                    {% endfor %}
+                                                                </ul>
+                                                            </li>
+                                                        {% elif item.name == 'MORE' %}
+                                                            <li class="moto-widget-menu-item moto-widget-menu-item-has-submenu">
+                                                                <a href="#" data-action="url" class="moto-widget-menu-link moto-widget-menu-link-level-1 moto-widget-menu-link-submenu moto-link"><i class="{{ item.icon }}"></i> {{ item.name }}<span class="fa moto-widget-menu-link-arrow"></span></a>
+                                                                <ul class="moto-widget-menu-sublist">
+                                                                    {% for j in more %}
+                                                                    <li class="moto-widget-menu-item">
+                                                                        <a href="{% url j.url %}" data-action="scroll_to_anchor" data-anchor="our-mission" data-time="0.4" data-moto-widget-actions-scroll-to="" class="moto-widget-menu-link moto-widget-menu-link-level-2 moto-link"><i class="{{ j.icon }}"></i> {{ j.name }}</a>
+                                                                    </li>
+                                                                    {% endfor %}
+                                                                </ul>
+                                                            </li>
+                                                        {% else %}
+                                                            <li class="moto-widget-menu-item">
+                                                                <a href="{% url item.url %}" data-action="scroll_to_anchor" data-anchor="our-mission" data-time="0.4" data-moto-widget-actions-scroll-to="" class="moto-widget-menu-link moto-widget-menu-link-level-1 moto-link"><i class="{{ item.icon }}"></i> {{ item.name }}</a>
+                                                            </li>    
+                                                        {% endif %}
+
+                                                      {% endfor %}
+                                                   </ul>
+                                                {% comment %} </div> {% endcomment %}
+                                             {% comment %} </div> {% endcomment %}
+                                                {% comment %} <div class="moto-widget moto-widget-row__column moto-cell col-sm-3 moto-spacing-top-auto moto-spacing-right-auto moto-spacing-bottom-auto moto-spacing-left-auto" style="" data-widget="row.column" data-container="container" data-spacing="aaaa" data-bg-position="left top">
+                                                    <div data-widget-id="wid_1548771069_28y4c0dbq" class="moto-widget moto-widget-button moto-preset-2 moto-preset-provider-default moto-align-right moto-align-center_mobile-h moto-spacing-top-auto moto-spacing-right-auto moto-spacing-bottom-auto moto-spacing-left-auto  " data-widget="button">
+                                                    <a href="{% url "core:login" %}" data-action="popup" data-popup-id="7" class="moto-widget-button-link moto-size-medium moto-link"><span class="fa moto-widget-theme-icon"></span><span class="moto-widget-button-divider"></span><span class="moto-widget-button-label">LOGIN</span></a>
+                                                    </div>
+                                                </div> {% endcomment %}
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <div data-widget-id="wid_1580221485_6tvt0gteb" class="moto-widget moto-widget-spacer moto-preset-default moto-spacing-top-auto moto-spacing-right-auto moto-spacing-bottom-auto moto-spacing-left-auto moto-visible-on_tablet_hidden moto-visible-on_mobile-h_hidden moto-visible-on_mobile-v_hidden" data-widget="spacer" data-preset="default" data-spacing="aaaa" data-visible-on="+desktop">
+                           <div class="moto-widget-spacer-block" style="height:20px"></div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            {% endblock %}
+
+            <main>
+                {% block content %}
+                
+                {% endblock %}
+            </main>
+
+
+            <div class="moto-widget moto-widget-block moto-bg-color_custom3 moto-spacing-top-small moto-spacing-right-auto moto-spacing-bottom-auto moto-spacing-left-auto" data-widget="block" data-spacing="aaaa" style="" data-bg-position="left top">
+                <div class="container-fluid">
+                  <div class="row">
+                    <div class="moto-cell col-sm-12" data-container="container">
+                      
+                      <!-- Row with three columns: Contact Info, Quick Links, Social Media -->
+                      <div class="moto-widget moto-widget-row row-fixed moto-spacing-top-small moto-spacing-right-auto moto-spacing-bottom-small moto-spacing-left-auto" data-grid-type="sm" data-widget="row" data-spacing="sasa" style="" data-bg-position="left top">
+                        <div class="container-fluid">
+                          <div class="row" data-container="container">
+                            
+                            <!-- Contact Info Column -->
+                            <div class="moto-widget moto-widget-row__column moto-cell col-sm-4 moto-spacing-top-auto moto-spacing-right-auto moto-spacing-bottom-auto moto-spacing-left-auto" style="" data-widget="row.column" data-container="container" data-spacing="aaaa" data-bg-position="left top">
+                              <div class="moto-widget moto-widget-text moto-preset-default moto-spacing-top-auto moto-spacing-right-auto moto-spacing-bottom-auto moto-spacing-left-auto" data-widget="text" data-preset="default" data-spacing="aaaa">
+                                <div class="moto-widget-text-content moto-widget-text-editable" style="color: #dfdfdf;"> <!-- Matching color -->
+                                  <h4>Contact Us</h4>
+                                  <p>Email: <a href="mailto:info@demolink.org" style="color: #dfdfdf;">info@demolink.org</a></p>
+                                  <p>Phone: <span style="color: #dfdfdf;">+91 123-456-7890</span></p>
+                                  <p>Address: <span style="color: #dfdfdf;">123 Main Street, City Name, India</span></p>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <!-- Quick Links Column -->
+                            <div class="moto-widget moto-widget-row__column moto-cell col-sm-4 moto-spacing-top-auto moto-spacing-right-auto moto-spacing-bottom-auto moto-spacing-left-auto" style="" data-widget="row.column" data-container="container" data-spacing="aaaa" data-bg-position="left top">
+                              <div class="moto-widget moto-widget-text moto-preset-default moto-spacing-top-auto moto-spacing-right-auto moto-spacing-bottom-auto moto-spacing-left-auto" data-widget="text" data-preset="default" data-spacing="aaaa">
+                                <div class="moto-widget-text-content moto-widget-text-editable" style="color: #dfdfdf;"> <!-- Matching color -->
+                                  <h4>Quick Links</h4>
+                                  <ul style="list-style-type: none; padding: 0;">
+                                    <li><a href="/about" style="color: #dfdfdf;">About Us</a></li>
+                                    <li><a href="/services" style="color: #dfdfdf;">Our Services</a></li>
+                                    <li><a href="/contact" style="color: #dfdfdf;">Contact</a></li>
+                                    <li><a href="/terms" style="color: #dfdfdf;">Terms of Service</a></li>
+                                    <li><a href="/privacy" style="color: #dfdfdf;">Privacy Policy</a></li>
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <!-- Social Media Column -->
+                            <div class="moto-widget moto-widget-row__column moto-cell col-sm-4 moto-spacing-top-auto moto-spacing-right-auto moto-spacing-bottom-auto moto-spacing-left-auto" style="" data-widget="row.column" data-container="container" data-spacing="aaaa" data-bg-position="left top">
+                              <div class="moto-widget moto-widget-text moto-preset-default moto-spacing-top-auto moto-spacing-right-auto moto-spacing-bottom-auto moto-spacing-left-auto" data-widget="text" data-preset="default" data-spacing="aaaa">
+                                <div class="moto-widget-text-content moto-widget-text-editable" style="color: #dfdfdf;"> <!-- Matching color -->
+                                  <h4>Follow Us</h4>
+                                  <p>
+                                    <a href="https://facebook.com" target="_blank" class="moto-link" style="color: #dfdfdf;"><i class="fa fa-facebook"></i> Facebook</a><br>
+                                    <a href="https://twitter.com" target="_blank" class="moto-link" style="color: #dfdfdf;"><i class="fa fa-twitter"></i> Twitter</a><br>
+                                    <a href="https://instagram.com" target="_blank" class="moto-link" style="color: #dfdfdf;"><i class="fa fa-instagram"></i> Instagram</a><br>
+                                    <a href="https://linkedin.com" target="_blank" class="moto-link" style="color: #dfdfdf;"><i class="fa fa-linkedin"></i> LinkedIn</a>
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                            
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <!-- Copyright Notice -->
+                      <div class="moto-widget moto-widget-text moto-preset-default moto-spacing-top-small moto-spacing-right-auto moto-spacing-bottom-small moto-spacing-left-auto" data-widget="text" data-preset="default" data-spacing="aaaa" data-visible-on="-" data-animation="">
+                        <div class="moto-widget-text-content moto-widget-text-editable">
+                          <p style="text-align: center; color: #FFFFFF;" class="moto-text_system_14">Copyright © 2024. All rights reserved.</p>
+                        </div>
+                      </div>
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+         </section>
+        </dev>
+
+        <script src="https://kit.fontawesome.com/c3a798b755.js" crossorigin="anonymous"></script>
+        <script src="{% static "js/website.assets.min.js" %}" type="text/javascript" data-cfasync="false"></script>
+      <script type="text/javascript" data-cfasync="false">
+         angular.module('website.plugins', []);
+      </script>
+      <script src="{% static "js/website.min.js" %}" type="text/javascript" data-cfasync="false"></script>
+    </body>
+</html>

@@ -52,7 +52,8 @@ def manage_employees(request):
 def manager_notifications(request):
     # Display all notifications received by the manager from employees
     notifications = Notification.objects.filter(is_fund_transfer=1).order_by('-created_at')
-    return render(request, 'manager/manager_notifications.html', {'notifications': notifications})
+    noti = Notification.objects.filter(is_fund_transfer=0,rvid=5).order_by('-created_at')  
+    return render(request, 'manager/manager_notifications.html', {'notifications': notifications,'noti':noti})
 
 
 @login_required

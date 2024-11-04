@@ -1,19 +1,15 @@
-<!-- wallet/templates/wallet/transaction_history.html -->
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Transaction History</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
-            color: #333;
-            display: flex;
-            justify-content: center;
-            padding: 20px;
-        }
+{% extends "layout.html" %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static "css/customer.css" %}">      
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #28a745;
+        color: #333;
+        {% comment %} padding: 20px; {% endcomment %}
+        margin: 0; /* Ensure there's no margin that can affect layout */
+    }
         .container {
             width: 80%;
             max-width: 800px;
@@ -24,7 +20,7 @@
         }
         h1 {
             text-align: center;
-            color: #0056b3;
+            color: #218838;
             font-size: 24px;
             margin-bottom: 20px;
         }
@@ -39,7 +35,7 @@
             border-bottom: 1px solid #ddd;
         }
         th {
-            background-color: #0056b3;
+            background-color: #218838;
             color: #fff;
             font-weight: bold;
         }
@@ -55,8 +51,9 @@
             color: #888;
         }
     </style>
-</head>
-<body>
+    {% endblock %}
+    
+    {% block content %}
     <div class="container">
         <h1>Transaction History</h1>
         <table>
@@ -81,7 +78,7 @@
                                 Bank
                             {% endif %}
                         </td>
-                        <td>${{ transaction.amount }}</td>
+                        <td>₹{{ transaction.amount }}</td>
                         <td>{{ transaction.transaction_type|title }}</td>
                     </tr>
                 {% empty %}
@@ -92,5 +89,4 @@
             </tbody>
         </table>
     </div>
-</body>
-</html>
+{% endblock %}

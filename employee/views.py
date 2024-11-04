@@ -9,6 +9,21 @@ from django.utils import timezone
 from core.models import Wallet
 
 
+from functools import wraps
+
+def verified_employee_required(view_func):
+    @wraps(view_func)
+    def _wrapped_view(request, *args, **kwargs):
+        # Check if the user is authenticated and is a verified employee
+        if request.user.is_authenticated and request.user.user_type == 2 and request.user.is_verified:
+            return view_func(request, *args, **kwargs)
+        
+        # Show an error message and redirect if not verified
+        messages.error(request, "You need to be a verified employee to access this page.")
+        return redirect('employee:employee_dashboard')  # Redirect to a relevant page for unverified employees
+    return _wrapped_view
+
+
 @login_required
 def create_user(request):
     if request.method == 'POST':
@@ -120,10 +135,12 @@ def view_address(request, user_id):
     return render(request, 'employee/view_address.html', {'user': user, 'address': address})
 
 @login_required
+@verified_employee_required
 def employee_dashboard(request):
     return render(request, 'employee/employee_dashboard.html')
 
 @login_required
+@verified_employee_required
 def collection_management(request):
     if request.method == 'POST':
         date = request.POST['date']
@@ -135,6 +152,7 @@ def collection_management(request):
             date=date,
             waste_type=waste_type,
         )
+        
         new_schedule.save()
 
         return redirect('employee:collection_management')
@@ -168,8 +186,8 @@ def send_notification_to_manager(request):
     if request.method == 'POST':        
         message = request.POST.get('message')
         manager = CustomUser.objects.filter(user_type=3).first()  # Assuming user_type=3 for Manager
-        
-        Notification.objects.create(user=manager, message=message)
+        rvid= '5'
+        Notification.objects.create(user=manager, message=message,rvid=rvid)
         messages.success(request, "Notification sent to manager.")
         return redirect('employee:employee_dashboard')
     return render(request, 'employee/send_notification.html')

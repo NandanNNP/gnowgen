@@ -103,6 +103,16 @@
             <li class="no-notifications">No notifications</li>
         {% endfor %}
     </ul>
+    <ul>
+        {% for notification in noti %}
+            <li>
+                <span>{{ notification.message }} - {{ notification.created_at }}</span>
+               
+            </li>
+        {% empty %}
+            <li class="no-notifications">No notifications</li>
+        {% endfor %}
+    </ul>
     <a class="send-notification" href="{% url 'manager:send_notification_to_employee' %}">Send Notification to Employee</a>
 </body>
 </html>

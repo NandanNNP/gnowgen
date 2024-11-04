@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,9 +11,11 @@
             max-width: 900px;
             margin: 40px auto;
         }
+        
         .fc-day {
             position: relative;
         }
+        
         .highlight {
             position: absolute;
             top: 0;
@@ -22,15 +25,35 @@
             border-radius: 5px;
             opacity: 0.5;
         }
-        .plastic { background-color: green; }
-        .iron { background-color: brown; }
-        .paper { background-color: #f0f0f0; }
-        .e-waste { background-color: blue; }
-        .aluminum { background-color: cyan; }
-        .glass { background-color: yellow; }
+        
+        .plastic {
+            background-color: brown;
+        }
+        
+        .iron {
+            background-color: #10c282  ;
+        }
+        
+        .paper {
+            background-color: green;
+        }
+        
+        .e-waste {
+            background-color: blue;
+        }
+        
+        .aluminum {
+            background-color: cyan;
+        }
+        
+        .glass {
+            background-color: yellow;
+        }
+        
         .today {
             border: 2px solid red;
         }
+        
         .today-circle {
             position: absolute;
             width: 100%;
@@ -44,61 +67,62 @@
         }
     </style>
 </head>
+
 <body>
 
-<h2>Book a Slot</h2>
-<div id="calendar"></div>
+    <h2>Book a Slot</h2>
+    <div id="calendar"></div>
 
-<!-- Manual form creation -->
-<form method="post" action="{% url 'customer:slot_booking' %}" id="booking-form">
-    {% csrf_token %}
-    <input type="hidden" name="date" id="selected_date">  <!-- Hidden input for date -->
-    <button type="submit" style="display: none;">Book Slot</button>  <!-- Hidden button to submit -->
-</form>
+    <!-- Manual form creation -->
+    <form method="post" action="{% url 'customer:slot_booking' %}" id="booking-form">
+        {% csrf_token %}
+        <input type="hidden" name="date" id="selected_date">
+        <button type="submit" style="display: none;">Book Slot</button>
+    </form>
 
-<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js'></script>
-<script>
-    $(document).ready(function() {
-        var events = {{ schedules|safe }};
-        var highlightDates = events.map(event => event.start); // Array of available dates
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js'></script>
+    <script>
+        $(document).ready(function () {
+            var events = {{ schedules|safe }};
+            var highlightDates = events.map(event => event.start);
 
-        $('#calendar').fullCalendar({
-            header: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'month,agendaWeek,agendaDay'
-            },
-            defaultDate: moment().format('YYYY-MM-DD'),
-            editable: false,
-            events: events,
-            dayClick: function(date, jsEvent, view) {
-                if (highlightDates.includes(date.format('YYYY-MM-DD'))) {
-                    if (confirm("Do you want to book this date: " + date.format("YYYY-MM-DD") + "?")) {
-                        $('#selected_date').val(date.format());  // Set the hidden input value
-                        alert("Selected Date: " + date.format("YYYY-MM-DD"));  // Optional alert for confirmation
-                        $('#booking-form').submit();  // Submit the form automatically
+            $('#calendar').fullCalendar({
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                },
+                defaultDate: moment().format('YYYY-MM-DD'),
+                editable: false,
+                events: events,
+                dayClick: function (date, jsEvent, view) {
+                    if (highlightDates.includes(date.format('YYYY-MM-DD'))) {
+                        if (confirm("Do you want to book this date: " + date.format("YYYY-MM-DD") + "?")) {
+                            $('#selected_date').val(date.format());
+                            alert("Selected Date: " + date.format("YYYY-MM-DD"));
+                            $('#booking-form').submit();
+                        }
+                    } else {
+                        alert("This date is not available for booking.");
                     }
-                } else {
-                    alert("This date is not available for booking.");
-                }
-            },
-            dayRender: function(date, cell) {
-                if (date.format('YYYY-MM-DD') === moment().format('YYYY-MM-DD')) {
-                    cell.addClass('today');
-                    cell.append('<div class="today-circle"></div>');
-                }
-                events.forEach(function(event) {
-                    if (date.format('YYYY-MM-DD') === event.start) {
-                        cell.append('<div class="highlight ' + event.className + '"></div>');
+                },
+                dayRender: function (date, cell) {
+                    if (date.format('YYYY-MM-DD') === moment().format('YYYY-MM-DD')) {
+                        cell.addClass('today');
+                        cell.append('<div class="today-circle"></div>');
                     }
-                });
-            }
+                    events.forEach(function (event) {
+                        if (date.format('YYYY-MM-DD') === event.start) {
+                            cell.append('<div class="highlight ' + event.className + '"></div>');
+                        }
+                    });
+                }
+            });
         });
-        
-    });
-</script>
+    </script>
 
 </body>
+
 </html>

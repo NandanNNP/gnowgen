@@ -1,8 +1,21 @@
-<h2>Wallet</h2>
-<p>Balance: {{ wallet.balance }}</p>
-<p>Rewards: {{ wallet.rewards }}</p>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Withdraw</button>
-</form>
+{% extends "layout.html" %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static "css/wallet.css" %}">
+{% endblock %}
+
+{% block content %}
+<div class="wallet-container">
+    <h2 class="wallet-title">Wallet</h2>
+    <div class="wallet-details">
+        <p class="wallet-balance">Balance: <span>{{ wallet.balance|default:"0.00" }} INR</span></p>
+        <p class="wallet-rewards">Rewards: <span>{{ wallet.rewards|default:"0" }}</span></p>
+    </div>
+    
+    <form method="post" class="withdraw-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="withdraw-button">Withdraw</button>
+    </form>
+</div>
+{% endblock %}
